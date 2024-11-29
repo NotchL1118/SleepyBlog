@@ -39,5 +39,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# package manager
-.package-lock.json
+# package manager 将 package-locK.json 加入忽略名单
+package-lock.json
