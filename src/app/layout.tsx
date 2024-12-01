@@ -1,15 +1,14 @@
-import type { Metadata, ResolvingMetadata } from "next";
 import Header from "@/components/Header";
+import type { Metadata, ResolvingMetadata } from "next";
 import "./globals.css";
 
 const basicMetadata: Metadata = {
   description: "A Sleepy Guy's Blog",
 };
 
-type Props = {
+interface Props {
   params: Promise<unknown>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-};
+}
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
   // TODO: 以后替换成api

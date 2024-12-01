@@ -2,9 +2,9 @@
 import { clsx } from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HeaderConfig } from "./config";
 import Styles from "./index.module.scss";
-const Header = () => {
+
+export default function Header() {
   const pathname = usePathname();
   return (
     <header className="sticky left-0 right-0 top-0">
@@ -37,6 +37,19 @@ const Header = () => {
       </div>
     </header>
   );
-};
+}
 
-export default Header;
+const HeaderConfig = [
+  {
+    title: "开发文章",
+    href: "/blog",
+  },
+  {
+    title: "生活随想",
+    href: "/life",
+  },
+  {
+    title: "关于我",
+    href: "/about",
+  },
+];
