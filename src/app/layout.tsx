@@ -23,6 +23,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     title: metaTitleArr[Math.floor(Math.random() * metaTitleArr.length)],
   };
 }
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,6 +31,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-cn">
+      <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-gb-web@latest/style.css" />
+      </head>
       <body className={`antialiased`}>
         <Header />
         {children}

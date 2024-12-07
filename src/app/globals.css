@@ -8,6 +8,16 @@
   font-size: 16px;
 }
 
+@layer components {
+  .headerHeight {
+    @apply h-14;
+  }
+  /* 顶开头部 */
+  .avoidHeader {
+    @apply mt-14;
+  }
+}
+
 /* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -18,5 +28,5 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "LXGW WenKai GB", sans-serif;
 }

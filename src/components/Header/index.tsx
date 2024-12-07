@@ -7,8 +7,8 @@ import Styles from "./index.module.scss";
 export default function Header() {
   const pathname = usePathname();
   return (
-    <header className="sticky left-0 right-0 top-0">
-      <div className="mx-auto flex h-10 w-full max-w-screen-xl items-center justify-between">
+    <header className="headerHeight fixed left-0 right-0 top-0">
+      <div className="mx-auto flex h-full w-full max-w-screen-xl items-center justify-between">
         <Link href="/" className="font-extrabold">
           S.Y.Blog
         </Link>
@@ -47,6 +47,14 @@ const HeaderConfig = [
   {
     title: "生活随想",
     href: "/life",
+  },
+  {
+    title: "碎碎念",
+    href: "/thoughts",
+  },
+  {
+    title: "随手一拍",
+    href: "/camera",
   },
   {
     title: "关于我",
