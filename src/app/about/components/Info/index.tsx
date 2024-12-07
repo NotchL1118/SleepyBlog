@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Info = () => {
   return (
-    <div className="mx-auto flex w-[90%] flex-col items-center justify-between sm:flex-row lg:w-[950]">
+    <div className="mx-auto flex w-[90%] flex-col items-center justify-between sm:flex-row lg:w-[950px]">
       <div className="h-[40%] w-[40%]">
         <Image
           loading="lazy"
