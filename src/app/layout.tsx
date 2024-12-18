@@ -1,6 +1,12 @@
 import Header from "@/components/Header";
 import type { Metadata, ResolvingMetadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
+
+const puHuiTi = localFont({
+  src: "../../public/fonts/AlibabaPuHuiTi-3-55-Regular.woff2",
+  display: "swap",
+});
 
 const basicMetadata: Metadata = {
   description: "A Sleepy Guy's Blog",
@@ -20,7 +26,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
   ];
   return {
     ...basicMetadata,
-    title: metaTitleArr[Math.floor(Math.random() * metaTitleArr.length)],
+    title: `${metaTitleArr[Math.floor(Math.random() * metaTitleArr.length)]} - SleepYoung's Blog`,
   };
 }
 
@@ -30,11 +36,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-cn">
+    <html lang="zh-cn" className={puHuiTi.className}>
       <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-gb-web@latest/style.css" />
+        {/* <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-gb-web@latest/style.css" /> */}
       </head>
-      <body className={`antialiased`}>
+      <body className="pb-16 antialiased">
         <Header />
         {children}
       </body>

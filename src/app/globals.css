@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: rgb(247, 249, 254);
+  /* --foreground: #171717; */
   font-size: 16px;
 }
 
@@ -26,7 +26,7 @@
 } */
 
 body {
-  color: var(--foreground);
+  /* color: var(--foreground); */
   background: var(--background);
-  font-family: "LXGW WenKai GB", sans-serif;
+  /* font-family: "LXGW WenKai GB", sans-serif; */
 }
