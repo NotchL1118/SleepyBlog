@@ -7,7 +7,7 @@ import Styles from "./index.module.scss";
 export default function Header() {
   const pathname = usePathname();
   return (
-    <header className="headerHeight fixed left-0 right-0 top-0">
+    <header className="headerHeight fixed left-0 right-0 top-0 border-b border-white/5 backdrop-blur-xl">
       <div className="relative mx-auto flex h-full w-4/5 items-center justify-between sm:max-w-screen-md lg:w-full lg:max-w-screen-xl">
         <Link href="/" className="font-extrabold">
           S.Y.Blog
