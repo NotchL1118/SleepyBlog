@@ -22,7 +22,11 @@ const goals: GoalItem[] = [
 const Goal = () => {
   const renderDefaultView = () => (
     <div>
-      <div>不畏将来，不念过往</div>
+      <div className="flex flex-col">
+        <p>不畏将来</p>
+        <p>不念过往</p>
+        <p>LSYFIGHTING.CN</p>
+      </div>
     </div>
   );
 
@@ -59,16 +63,12 @@ const Goal = () => {
 
   return (
     <ItemContainer title="2025年度目标">
-      <div className="no-scrollbar group relative min-h-80 overflow-auto">
+      <div className="no-scrollbar group relative h-72 overflow-auto">
         {/* Default View */}
-        <div className="absolute inset-0 opacity-100 transition-opacity duration-100 ease-in-out group-hover:opacity-0">
-          {renderDefaultView()}
-        </div>
+        <div className="group-hover:hidden">{renderDefaultView()}</div>
 
         {/* Hover View */}
-        <div className="absolute inset-0 opacity-0 transition-opacity duration-100 ease-in-out group-hover:opacity-100">
-          {renderGoalListView()}
-        </div>
+        <div className="hidden group-hover:block">{renderGoalListView()}</div>
       </div>
     </ItemContainer>
   );

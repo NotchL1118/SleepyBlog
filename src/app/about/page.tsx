@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "👋不一样的烟火",
 };
 
-export default function About() {
+export default async function About() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="avoidHeader flex w-full flex-col items-center gap-5">
