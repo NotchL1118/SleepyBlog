@@ -42,9 +42,9 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-gb-web@latest/style.css" />
       </head>
       <body className="pb-16 antialiased">
-        <SpeedInsights />
         <Header />
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
