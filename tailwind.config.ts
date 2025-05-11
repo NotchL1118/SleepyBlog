@@ -13,6 +13,9 @@ export default {
         foreground: "var(--foreground)",
       },
     },
+    fontFamily: {
+      LXGW: ["LXGW WenKai GB", "sans-serif"],
+    },
   },
   plugins: [],
 } satisfies Config;

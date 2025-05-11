@@ -1,3 +1,5 @@
+import Index from "./index/page";
+
 export default function Home() {
-  return <div>Hello World</div>;
+  return <Index />;
 }

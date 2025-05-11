@@ -7,16 +7,12 @@ interface GoalItem {
 }
 
 const goals: GoalItem[] = [
-  { id: 1, content: "拿到月薪过万的 Offer~", status: "pending" },
-  { id: 2, content: "学习 uniapp 小兔鲜项目", status: "completed" },
-  { id: 3, content: "学习 Spring Boot 苍穹外卖项目", status: "completed" },
-  { id: 4, content: "学习 React 达到找工作水平", status: "completed" },
-  { id: 5, content: "学习 TailwindCSS 达到找工作水平", status: "completed" },
-  { id: 6, content: "学习 Nextjs 达到找工作水平", status: "completed" },
-  { id: 7, content: "入手 MacBook 生产力神器", status: "completed" },
-  { id: 8, content: "完成 ThriveX 项目重构", status: "completed" },
-  { id: 9, content: "ThriveX 博客管理系统 Star 破百", status: "completed" },
-  { id: 10, content: "刷 100 道面试题", status: "inProgress" },
+  { id: 1, content: "脱单", status: "pending" },
+  { id: 2, content: "搭完博客", status: "pending" },
+  { id: 3, content: "学习英语", status: "pending" },
+  { id: 4, content: "学习一门新的语言", status: "pending" },
+  { id: 5, content: "学习 TailwindCSS", status: "pending" },
+  { id: 6, content: "学习 Nextjs", status: "pending" },
 ];
 
 const Goal = () => {

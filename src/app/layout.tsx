@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, ResolvingMetadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -38,9 +39,10 @@ export default function RootLayout({
   return (
     <html lang="zh-cn" className={puHuiTi.className}>
       <head>
-        {/* <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-gb-web@latest/style.css" /> */}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-gb-web@latest/style.css" />
       </head>
       <body className="pb-16 antialiased">
+        <SpeedInsights />
         <Header />
         {children}
       </body>

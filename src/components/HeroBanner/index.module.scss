@@ -1,0 +1,40 @@
+@keyframes moveForever {
+  0% {
+    transform: translate3d(-90px, 0, 0);
+  }
+  100% {
+    transform: translate3d(85px, 0, 0);
+  }
+}
+
+.waveSlow {
+  animation: moveForever 20s linear infinite;
+}
+
+.waveFast {
+  animation: moveForever 10s linear infinite;
+  animation-delay: -2s;
+}
+
+.waveContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0; /* 消除间隙 */
+}
+
+.waveSvg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 70px; /* 这里可以自定义波浪高度 */
+}
+
+/* 不同尺寸断点下的波浪高度 */
+@media (max-width: 768px) {
+  .waveSvg {
+    height: 40px; /* 移动设备上较小的波浪高度 */
+  }
+}
