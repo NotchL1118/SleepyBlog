@@ -1,14 +1,17 @@
 "use client";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { clsx } from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import GlowEffect from "./GlowEffect";
 import Styles from "./index.module.scss";
 
 export default function Header() {
   const pathname = usePathname();
+
   return (
-    <header className="headerHeight fixed left-0 right-0 top-0 z-[999] border-b border-white/5 backdrop-blur-xl">
-      <div className="relative mx-auto flex h-full w-4/5 items-center justify-between sm:max-w-screen-md lg:w-full lg:max-w-screen-xl">
+    <header className={clsx("headerHeight fixed left-0 right-0 top-0 z-[999] backdrop-blur-xl", Styles.headerSurface)}>
+      <GlowEffect className="mx-auto flex h-full w-4/5 items-center justify-between sm:max-w-screen-md lg:w-full lg:max-w-screen-xl">
         <Link href="/" className="font-extrabold">
           S.Y.Blog
         </Link>
@@ -16,8 +19,8 @@ export default function Header() {
           <nav className="flex items-center gap-4">
             <Link
               href="/"
-              className={clsx(`${Styles["horizontal-line"]} font-extrabold`, {
-                [Styles["horizontal-line-active"]]: pathname === "/",
+              className={clsx(Styles.navItem, "font-extrabold", {
+                [Styles.navItemActive]: pathname === "/",
               })}
             >
               首页
@@ -26,8 +29,8 @@ export default function Header() {
               <Link
                 key={index}
                 href={item.href}
-                className={clsx(`${Styles["horizontal-line"]} font-extrabold`, {
-                  [Styles["horizontal-line-active"]]: pathname.startsWith(item.href),
+                className={clsx(Styles.navItem, "font-extrabold", {
+                  [Styles.navItemActive]: pathname.startsWith(item.href),
                 })}
               >
                 {item.title}
@@ -35,8 +38,13 @@ export default function Header() {
             ))}
           </nav>
         </div>
-        <button>登录</button>
-      </div>
+        <div className="flex items-center gap-2">
+          <ThemeSwitcher />
+          <button className="rounded-md px-3 py-1 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800">
+            登录
+          </button>
+        </div>
+      </GlowEffect>
     </header>
   );
 }

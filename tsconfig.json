@@ -19,8 +19,14 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/app/*"],
+      "@/*": ["./src/*"],
+      "@/app/*": ["./src/app/*"],
       "@/components/*": ["./src/components/*"],
+      "@/providers/*": ["./src/providers/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/utils/*": ["./src/utils/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/models/*": ["./src/models/*"]
     },
     "noUnusedParameters": false,
     "noUnusedLocals": false

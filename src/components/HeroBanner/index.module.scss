@@ -16,6 +16,36 @@
   animation-delay: -2s;
 }
 
+.waveMedium {
+  animation: moveForever 15s linear infinite;
+  animation-delay: -10s;
+}
+
+/* Wave colors controlled purely by CSS to avoid hydration mismatch */
+.waveMain {
+  fill: white;
+}
+
+.waveSecondary {
+  fill: rgba(255, 255, 255, 0.8);
+}
+
+.waveGradient {
+  fill: url(#lightGradient);
+}
+
+:global(.dark) .waveMain {
+  fill: rgb(17, 24, 39);
+}
+
+:global(.dark) .waveSecondary {
+  fill: rgba(17, 24, 39, 0.8);
+}
+
+:global(.dark) .waveGradient {
+  fill: url(#darkGradient);
+}
+
 .waveContainer {
   position: absolute;
   bottom: 0;

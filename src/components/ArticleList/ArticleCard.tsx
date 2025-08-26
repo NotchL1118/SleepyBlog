@@ -2,14 +2,14 @@ import Link from "next/link";
 import { ClockIcon, FireIcon, NoteIcon } from "../../components/Icons";
 
 interface IArticleCardProps {
-  pageId: number;
+  slug: string;
   title: string;
   content: string;
   coverImage: string;
   mode: "normal" | "reverse";
 }
 
-const ArticleCard = ({ title, content, coverImage, pageId, mode }: IArticleCardProps) => {
+const ArticleCard = ({ title, content, coverImage, slug, mode }: IArticleCardProps) => {
   const renderImage = () => {
     // 斜线filter切割方向样式
     return (
@@ -50,7 +50,7 @@ const ArticleCard = ({ title, content, coverImage, pageId, mode }: IArticleCardP
   };
 
   return (
-    <Link href={`/article/${pageId}`}>
+    <Link href={`/article/${slug}`}>
       <div className="relative flex h-[190px] overflow-hidden rounded-md bg-black md:h-60 lg:h-52 xl:h-60">
         <div
           style={{

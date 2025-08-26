@@ -13,6 +13,7 @@ const articleData = [
     views: 101,
     tag: "生活随笔",
     imagePosition: "left" as const,
+    slug: "nextjs-15-features",
   },
   {
     id: 2,
@@ -23,6 +24,7 @@ const articleData = [
     views: 74,
     tag: "生活随笔",
     imagePosition: "right" as const,
+    slug: "mongodb-nodejs-best-practices",
   },
   {
     id: 3,
@@ -34,6 +36,7 @@ const articleData = [
     views: 822,
     tag: "生活随笔",
     imagePosition: "left" as const,
+    slug: "typescript-advanced-types",
   },
   {
     id: 4,
@@ -45,6 +48,7 @@ const articleData = [
     views: 1536,
     tag: "生活随笔",
     imagePosition: "right" as const,
+    slug: "react-18-concurrent-features",
   },
 ];
 
@@ -54,7 +58,7 @@ const ArticleList: React.FC = () => {
       {articleData.map((article) => (
         <ArticleCard
           key={article.id}
-          pageId={article.id}
+          slug={article.slug}
           title={article.title}
           content={article.content}
           coverImage={article.imageUrl}

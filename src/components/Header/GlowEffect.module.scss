@@ -1,0 +1,43 @@
+/* Bottom moving glow that follows the cursor */
+.glowTrack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--header-height);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.glow {
+  position: absolute;
+  left: var(--x, 50%);
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 360px;
+  height: 44px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    180px 26px at center,
+    rgba(59, 130, 246, 0.15),
+    rgba(59, 130, 246, 0.06) 60%,
+    transparent 72%
+  );
+  filter: blur(18px);
+  opacity: 0.9;
+}
+
+:global(.dark) .glow {
+  background: radial-gradient(
+    160px 32px at center,
+    rgba(96, 165, 250, 0.32),
+    rgba(37, 99, 235, 0.12) 55%,
+    transparent 70%
+  );
+  filter: blur(20px);
+}
+
+.glowHidden {
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}

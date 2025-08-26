@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import { RootProvider } from "@/providers/root";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, ResolvingMetadata } from "next";
 import localFont from "next/font/local";
@@ -37,13 +38,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-cn" className={puHuiTi.className}>
+    <html lang="zh-cn" className={puHuiTi.className} suppressHydrationWarning>
       <head>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-gb-web@latest/style.css" />
       </head>
-      <body className="pb-16 antialiased">
-        <Header />
-        {children}
+      <body className="antialiased">
+        <RootProvider>
+          <Header />
+          {children}
+        </RootProvider>
         <SpeedInsights />
       </body>
     </html>
