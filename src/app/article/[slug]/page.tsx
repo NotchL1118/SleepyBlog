@@ -1,3 +1,5 @@
+import { getArticle } from "@/actions/article";
+import { ArticleViewTracker } from "@/components/ArticleViewTracker";
 import { mdxComponents } from "@/mdx-components";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
@@ -7,48 +9,11 @@ interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }
 
-interface Article {
-  _id: string;
-  title: string;
-  content: string;
-  excerpt?: string;
-  author: string;
-  tags: string[];
-  category: string;
-  status: "draft" | "published" | "archived";
-  publishedAt?: string;
-  readingTime?: number;
-  viewCount: number;
-  likeCount: number;
-  slug: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-async function getArticle(slug: string): Promise<Article | null> {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/articles/${slug}`,
-      {
-        cache: "no-store", // 确保获取最新数据
-      }
-    );
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const result = await response.json();
-    return result.success ? result.data : null;
-  } catch (error) {
-    console.error("获取文章失败:", error);
-    return null;
-  }
-}
-
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
-  const article = await getArticle(slug);
+
+  // 获取文章内容，不增加浏览次数
+  const article = (await getArticle(slug, false))?.data;
 
   if (!article) {
     notFound();
@@ -56,6 +21,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <div className="avoidHeader min-h-screen bg-white dark:bg-gray-900">
+      {/* 浏览次数追踪组件 */}
+      <ArticleViewTracker slug={slug} />
+
       <div className="mx-auto max-w-4xl px-4 py-8">
         <article className="prose prose-lg dark:prose-invert max-w-none">
           {/* 文章头部信息 */}
@@ -63,7 +31,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">{article.title}</h1>
 
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-              <span>作者: {article.author}</span>
               <span>分类: {article.category}</span>
               {article.readingTime && <span>阅读时间: {article.readingTime} 分钟</span>}
               <span>浏览: {article.viewCount} 次</span>

@@ -1,22 +1,11 @@
+import type { Article } from "@/types/article";
 import mongoose, { Document, Schema } from "mongoose";
 
-// 定义文章接口
-export interface IArticle extends Document {
-  title: string;
-  content: string;
-  excerpt?: string;
-  author: string;
-  tags: string[];
-  category: string;
-  status: "draft" | "published" | "archived";
-  publishedAt?: Date;
-  readingTime?: number;
-  viewCount: number;
-  likeCount: number;
-  slug: string;
+// 数据库文档接口：基于Article类型，但将日期字段改为Date类型
+export interface IArticle extends Document, Omit<Article, "_id" | "createdAt" | "updatedAt" | "publishedAt"> {
   createdAt: Date;
   updatedAt: Date;
-  coverImageUrl: string;
+  publishedAt?: Date;
 }
 
 // 定义文章模式
@@ -34,22 +23,17 @@ const ArticleSchema: Schema = new Schema(
     },
     excerpt: {
       type: String,
-      maxlength: [500, "摘要不能超过500个字符"],
-    },
-    author: {
-      type: String,
-      required: [true, "作者是必填项"],
-      trim: true,
+      maxlength: [1000, "摘要不能超过1000个字符"],
     },
     tags: {
       type: [String],
       default: [],
-      validate: {
-        validator: function (tags: string[]) {
-          return tags.length <= 10;
-        },
-        message: "标签数量不能超过10个",
-      },
+      // validate: {
+      //   validator: function (tags: string[]) {
+      //     return tags.length <= 10;
+      //   },
+      //   message: "标签数量不能超过10个",
+      // },
     },
     category: {
       type: String,
@@ -84,6 +68,9 @@ const ArticleSchema: Schema = new Schema(
       unique: true,
       trim: true,
       lowercase: true,
+    },
+    coverImageUrl: {
+      type: String,
     },
   },
   {

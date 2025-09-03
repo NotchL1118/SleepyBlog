@@ -2,25 +2,6 @@
 
 一个基于 Next.js 15 和 MongoDB 的现代博客应用。
 
-## ✨ 功能特性
-
-### 📚 文章管理
-
-- ✅ 完整的文章CRUD操作
-- ✅ 文章分类和标签系统
-- ✅ 文章状态管理（草稿/已发布/已归档）
-- ✅ 文章搜索和筛选
-- ✅ 分页支持
-- ✅ 阅读时间计算
-- ✅ 浏览和点赞统计
-
-### 🎨 MDX 支持
-
-- ✅ 丰富的MDX组件库
-- ✅ 代码高亮显示
-- ✅ 在线MDX编辑器
-- ✅ 实时预览功能
-
 ### 🔧 技术栈
 
 - **前端**: Next.js 15, React 19, TypeScript
@@ -74,7 +55,6 @@ interface Article {
   title: string; // 文章标题
   content: string; // 文章内容（Markdown格式）
   excerpt?: string; // 文章摘要
-  author: string; // 作者
   tags: string[]; // 标签数组
   category: string; // 分类
   status: "draft" | "published" | "archived"; // 状态

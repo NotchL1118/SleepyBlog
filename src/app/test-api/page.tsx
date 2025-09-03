@@ -1,32 +1,10 @@
 "use client";
 
-import { getArticles, getCategories, getTags } from "@/services/api/articles";
+import { getArticleList, getCategories, getTags, initializeTestData, testDatabaseConnection } from "@/actions/article";
+import ServerActionBuilder from "@/lib/server-action";
+import { Article } from "@/types/article";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-interface Article {
-  _id: string;
-  title: string;
-  content: string;
-  excerpt: string;
-  author: string;
-  tags: string[];
-  category: string;
-  status: "draft" | "published" | "archived";
-  publishedAt?: string;
-  readingTime?: number;
-  viewCount: number;
-  likeCount: number;
-  slug: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface ApiResponse {
-  success: boolean;
-  resultMessage?: string;
-  error?: string;
-}
 
 export default function TestApiPage() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -43,9 +21,13 @@ export default function TestApiPage() {
     setSuccess(null);
 
     try {
-      const result = await getArticles({ page: 1, limit: 10 });
-      setArticles(result.items);
-      setSuccess(`文章列表获取成功！共 ${result.items.length} 篇文章`);
+      const result = await getArticleList();
+      if (ServerActionBuilder.isSuccess(result)) {
+        setArticles(result.data?.items || []);
+        setSuccess(result.message || "获取文章列表成功！共 " + (result.data?.items?.length || 0) + " 篇文章");
+      } else {
+        setError(result.error || "获取文章列表失败");
+      }
     } catch (err) {
       setError("获取文章列表失败：" + (err as Error).message);
     } finally {
@@ -61,8 +43,12 @@ export default function TestApiPage() {
 
     try {
       const result = await getCategories();
-      setCategories(result);
-      setSuccess(`分类列表获取成功！共 ${result.length} 个分类`);
+      if (ServerActionBuilder.isSuccess(result)) {
+        setCategories(result.data || []);
+        setSuccess(result.message || "获取分类列表成功！共 " + (result.data?.length || 0) + " 个分类");
+      } else {
+        setError(result.error || "获取分类列表失败");
+      }
     } catch (err) {
       setError("获取分类列表失败：" + (err as Error).message);
     } finally {
@@ -78,8 +64,12 @@ export default function TestApiPage() {
 
     try {
       const result = await getTags();
-      setTags(result);
-      setSuccess(`标签列表获取成功！共 ${result.length} 个标签`);
+      if (ServerActionBuilder.isSuccess(result)) {
+        setTags(result.data || []);
+        setSuccess(result.message || "获取标签列表成功！共 " + (result.data?.length || 0) + " 个标签");
+      } else {
+        setError(result.error || "获取标签列表失败");
+      }
     } catch (err) {
       setError("获取标签列表失败：" + (err as Error).message);
     } finally {
@@ -93,21 +83,14 @@ export default function TestApiPage() {
     setError(null);
 
     try {
-      const url = `/api/articles/seed${force ? "?force=true" : ""}`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const result: ApiResponse = await response.json();
+      const result = await initializeTestData(force);
 
-      if (result.success) {
-        setSuccess(result.resultMessage || "数据初始化成功！");
+      if (ServerActionBuilder.isSuccess(result)) {
+        setSuccess(result.data || result.message || "初始化成功");
         // 初始化成功后自动获取文章列表
         await fetchArticles();
       } else {
-        setError(result.error || result.resultMessage || "数据初始化失败");
+        setError(result.error || "初始化失败");
       }
     } catch (err) {
       setError("网络错误：" + (err as Error).message);
@@ -123,9 +106,12 @@ export default function TestApiPage() {
     setSuccess(null);
 
     try {
-      // 使用服务函数测试连接
-      await getArticles({ page: 1, limit: 1 });
-      setSuccess("MongoDB连接成功！");
+      const result = await testDatabaseConnection();
+      if (ServerActionBuilder.isSuccess(result)) {
+        setSuccess(result.data || result.message || "连接成功");
+      } else {
+        setError(result.error || "连接失败");
+      }
     } catch (err) {
       setError("MongoDB连接失败：" + (err as Error).message);
     } finally {
@@ -140,7 +126,10 @@ export default function TestApiPage() {
 
   return (
     <div className="avoidHeader container mx-auto px-4">
-      <h1 className="mb-8 text-3xl font-bold">API 测试页面</h1>
+      <h1 className="mb-8 text-3xl font-bold">数据库服务测试页面</h1>
+      <p className="mb-6 text-gray-600 dark:text-gray-400">
+        此页面使用 Server Actions 测试数据库连接和服务层功能，符合新架构规范。
+      </p>
 
       {/* 状态显示 */}
       {loading && (
@@ -252,7 +241,6 @@ export default function TestApiPage() {
 
                   <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                     <div>
-                      <span>作者: {article.author}</span>
                       <span className="mx-2">|</span>
                       <span>分类: {article.category}</span>
                       {article.readingTime && (

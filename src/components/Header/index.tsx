@@ -40,9 +40,9 @@ export default function Header() {
         </div>
         <div className="flex items-center gap-2">
           <ThemeSwitcher />
-          <button className="rounded-md px-3 py-1 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800">
+          {/* <button className="rounded-md px-3 py-1 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800">
             登录
-          </button>
+          </button> */}
         </div>
       </GlowEffect>
     </header>
