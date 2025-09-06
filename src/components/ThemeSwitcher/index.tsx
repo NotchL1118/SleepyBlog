@@ -1,6 +1,6 @@
 "use client";
 
-import useIsClient from "@/hooks/use-is-client";
+import useIsClient from "@/hooks/useIsClient";
 import { transitionViewIfSupported } from "@/utils/dom";
 import { clsx } from "clsx";
 import { useTheme } from "next-themes";

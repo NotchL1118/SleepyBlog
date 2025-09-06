@@ -1,0 +1,5 @@
+---
+description: export导出函数或变量时，不要出现export { functionA, funtcionB, valueA, valueB } 的导出方式
+globs:
+alwaysApply: true
+---

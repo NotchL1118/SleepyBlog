@@ -5,18 +5,22 @@ interface IArticleCardProps {
   slug: string;
   title: string;
   content: string;
-  coverImage: string;
+  coverImage?: string;
   mode: "normal" | "reverse";
+  date?: string;
+  viewCount?: number;
+  category?: string;
 }
 
-const ArticleCard = ({ title, content, coverImage, slug, mode }: IArticleCardProps) => {
+const ArticleCard = ({ title, content, coverImage, slug, mode, date, viewCount, category }: IArticleCardProps) => {
   const renderImage = () => {
     // 斜线filter切割方向样式
+    const defaultImage = "/images/mountain1.png";
     return (
       <div
         className="h-full w-[45%] bg-cover bg-center bg-no-repeat transition-all duration-500 ease-in-out hover:scale-125"
         style={{
-          backgroundImage: `url(${coverImage})`,
+          backgroundImage: `url(${coverImage || defaultImage})`,
           clipPath:
             mode === "reverse" ? "polygon(10% 0, 100% 0, 100% 100%, 0 100%)" : "polygon(0 0, 100% 0, 90% 100%, 0 100%)",
         }}
@@ -25,25 +29,31 @@ const ArticleCard = ({ title, content, coverImage, slug, mode }: IArticleCardPro
   };
 
   const renderOtherInfo = () => {
+    // 格式化日期
+    const formatDate = (dateString?: string) => {
+      if (!dateString) return new Date().toLocaleDateString("zh-CN");
+      return new Date(dateString).toLocaleDateString("zh-CN");
+    };
+
     return (
       <div className="mt-2 flex items-center space-x-4 text-xs text-white/60">
         <div className="flex items-center">
           <div className="mr-1.5 flex items-center justify-center rounded-full bg-blue-500 p-1">
             <ClockIcon className="h-3 w-3 text-white" />
           </div>
-          <span>2025-05-04</span>
+          <span>{formatDate(date)}</span>
         </div>
         <div className="flex items-center">
           <div className="mr-1.5 flex items-center justify-center rounded-full bg-red-500 p-1">
             <FireIcon className="h-3 w-3 text-white" />
           </div>
-          <span>185</span>
+          <span>{viewCount || 0}</span>
         </div>
         <div className="flex items-center">
           <div className="mr-1.5 flex items-center justify-center rounded-full bg-amber-500 p-1">
             <NoteIcon className="h-3 w-3 text-white" />
           </div>
-          <span>生活随笔</span>
+          <span>{category || "未分类"}</span>
         </div>
       </div>
     );
@@ -54,7 +64,7 @@ const ArticleCard = ({ title, content, coverImage, slug, mode }: IArticleCardPro
       <div className="relative flex h-[190px] overflow-hidden rounded-md bg-black md:h-60 lg:h-52 xl:h-60">
         <div
           style={{
-            backgroundImage: `url(${coverImage})`,
+            backgroundImage: `url(${coverImage || "/images/mountain1.png"})`,
           }}
           className="absolute h-full w-full bg-cover bg-center blur-xl brightness-[0.6]"
         />

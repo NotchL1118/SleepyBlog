@@ -1,71 +1,69 @@
-"use client";
-import React from "react";
+import { getArticleList } from "@/actions/article";
+import type { Article } from "@/types/article";
+import ArticleListSkeleton from "@/ui/ArticleListSkeleton";
+import { Suspense } from "react";
 import ArticleCard from "./ArticleCard";
 
-// 示例文章数据
-const articleData = [
-  {
-    id: 1,
-    title: "文章1，这里是标题，我也不知道有多少",
-    content: "这里应该是内容，到时候服务器那里拿,应该用AI简介比较合适？",
-    imageUrl: "/images/mountain1.png",
-    date: "2025-04-05",
-    views: 101,
-    tag: "生活随笔",
-    imagePosition: "left" as const,
-    slug: "nextjs-15-features",
-  },
-  {
-    id: 2,
-    title: "文章2，这里是标题，我也不知道有多少",
-    content: "这里应该是内容，到时候服务器那里拿,应该用AI简介比较合适？",
-    imageUrl: "/images/mountain1.png",
-    date: "2025-04-05",
-    views: 74,
-    tag: "生活随笔",
-    imagePosition: "right" as const,
-    slug: "mongodb-nodejs-best-practices",
-  },
-  {
-    id: 3,
-    title: "文章3，这里是标题，我也不知道有多少",
-    content:
-      "这里应该是内容，到时候服务器那里拿,应该用AI简介比较合适？这里应该是内容，到时候服务器那里拿,应该用AI简介比较合适？这里应该是内容，到时候服务器那里拿,应该用AI简介比较合适？",
-    imageUrl: "/images/mountain1.png",
-    date: "2025-03-11",
-    views: 822,
-    tag: "生活随笔",
-    imagePosition: "left" as const,
-    slug: "typescript-advanced-types",
-  },
-  {
-    id: 4,
-    title: "文章4，这里是标题，我也不知道有多少",
-    content:
-      "这里应该是内容，到时候服务器那里拿,应该用AI简介比较合适这里应该是内容，到时候服务器那里拿,应该用AI简介比较合适？这里应该是内容，到时候服务器那里拿,应该用AI简介比较合适？？",
-    imageUrl: "/images/mountain1.png",
-    date: "2025-02-03",
-    views: 1536,
-    tag: "生活随笔",
-    imagePosition: "right" as const,
-    slug: "react-18-concurrent-features",
-  },
-];
+interface ArticleListContentProps {
+  page?: number;
+  limit?: number;
+  category?: string;
+  tag?: string;
+  search?: string;
+}
 
-const ArticleList: React.FC = () => {
+const ArticleListContent = async ({ page = 1, limit = 10, category, tag, search }: ArticleListContentProps) => {
+  const response = await getArticleList({
+    page,
+    limit,
+    status: "published",
+    category,
+    tag,
+    search,
+  });
+
+  if (!response.success || !response.data) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <p className="text-gray-500 dark:text-gray-400">暂无文章数据</p>
+      </div>
+    );
+  }
+
+  const { items: articles } = response.data;
+
+  if (articles.length === 0) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <p className="text-gray-500 dark:text-gray-400">暂无文章</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col space-y-6">
-      {articleData.map((article) => (
+      {articles.map((article: Article, index: number) => (
         <ArticleCard
-          key={article.id}
+          key={article._id}
           slug={article.slug}
           title={article.title}
-          content={article.content}
-          coverImage={article.imageUrl}
-          mode={article.imagePosition === "left" ? "normal" : "reverse"}
+          content={article.excerpt || article.content}
+          coverImage={article.coverImageUrl}
+          mode={index % 2 === 0 ? "normal" : "reverse"}
+          date={article.publishedAt || article.createdAt}
+          viewCount={article.viewCount}
+          category={article.category}
         />
       ))}
     </div>
+  );
+};
+
+const ArticleList = (props: ArticleListContentProps) => {
+  return (
+    <Suspense fallback={<ArticleListSkeleton count={props.limit || 4} />}>
+      <ArticleListContent {...props} />
+    </Suspense>
   );
 };
 

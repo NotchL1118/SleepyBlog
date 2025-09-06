@@ -130,23 +130,22 @@ async function connectToDatabase(): Promise<typeof mongoose> {
 /**
  * 断开数据库连接
  */
-async function disconnectFromDatabase(): Promise<void> {
+export async function disconnectFromDatabase(): Promise<void> {
   return dbManager.disconnect();
 }
 
 /**
  * 获取数据库连接状态
  */
-function getDatabaseConnectionState(): string {
+export function getDatabaseConnectionState(): string {
   return dbManager.getConnectionState();
 }
 
 /**
  * 检查数据库是否已连接
  */
-function isDatabaseConnected(): boolean {
+export function isDatabaseConnected(): boolean {
   return dbManager.isConnected();
 }
 
 export default connectToDatabase;
-export { disconnectFromDatabase, getDatabaseConnectionState, isDatabaseConnected };

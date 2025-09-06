@@ -1,5 +1,4 @@
 import { getArticle } from "@/actions/article";
-import { ArticleViewTracker } from "@/components/ArticleViewTracker";
 import { mdxComponents } from "@/mdx-components";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
@@ -12,8 +11,8 @@ interface ArticlePageProps {
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
 
-  // 获取文章内容，不增加浏览次数
-  const article = (await getArticle(slug, false))?.data;
+  // 获取文章内容，增加浏览次数
+  const article = (await getArticle(slug, true))?.data;
 
   if (!article) {
     notFound();
@@ -21,9 +20,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <div className="avoidHeader min-h-screen bg-white dark:bg-gray-900">
-      {/* 浏览次数追踪组件 */}
-      <ArticleViewTracker slug={slug} />
-
       <div className="mx-auto max-w-4xl px-4 py-8">
         <article className="prose prose-lg dark:prose-invert max-w-none">
           {/* 文章头部信息 */}

@@ -27,7 +27,7 @@ const myselfIntroduction = [
   {
     icon: Target,
     title: "目标导向",
-    content: "先完成，再完美;踏上取经路，比抵达灵山更重要",
+    content: "踏上取经路，比抵达灵山更重要",
     color: "from-green-500 to-emerald-500",
   },
 ];

@@ -43,137 +43,21 @@ html.dark {
   }
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
   /* font-family: "LXGW WenKai GB", sans-serif; */
 }
 
-/* 美化滚动条样式 - 渐变色版本 */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* 全局隐藏滑动条 */
+html::-webkit-scrollbar {
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
-  border-radius: 10px;
-  transition: all 0.3s ease;
-  opacity: 0.8;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  opacity: 1;
-  background: linear-gradient(135deg, #5a67d8 0%, #667eea 25%, #e879f9 50%, #f43f5e 75%, #3b82f6 100%);
-  transform: scale(1.1);
-}
-
-/* 深色模式下的滚动条 */
-.dark ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #4a5568 0%, #2d3748 25%, #553c9a 50%, #7c3aed 75%, #1e40af 100%);
-  opacity: 0.9;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  opacity: 1;
-  background: linear-gradient(135deg, #718096 0%, #4a5568 25%, #7c3aed 50%, #8b5cf6 75%, #3b82f6 100%);
-}
-
-/* 自动隐藏滚动条 - 渐变色版本 */
-.auto-hide-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(102, 126, 234, 0.3) transparent;
-  transition: scrollbar-color 0.3s ease;
-}
-
-.auto-hide-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.auto-hide-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.auto-hide-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    135deg,
-    rgba(102, 126, 234, 0.3) 0%,
-    rgba(118, 75, 162, 0.3) 50%,
-    rgba(240, 147, 251, 0.3) 100%
-  );
-  border-radius: 3px;
-  transition: all 0.3s ease;
-  opacity: 0;
-}
-
-.auto-hide-scrollbar:hover::-webkit-scrollbar-thumb {
-  opacity: 1;
-  background: linear-gradient(
-    135deg,
-    rgba(102, 126, 234, 0.6) 0%,
-    rgba(118, 75, 162, 0.6) 50%,
-    rgba(240, 147, 251, 0.6) 100%
-  );
-}
-
-.auto-hide-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(102, 126, 234, 0.8) 0%,
-    rgba(118, 75, 162, 0.8) 50%,
-    rgba(240, 147, 251, 0.8) 100%
-  );
-  transform: scale(1.2);
-}
-
-/* 深色模式下的自动隐藏滚动条 */
-.dark .auto-hide-scrollbar {
-  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
-}
-
-.dark .auto-hide-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    135deg,
-    rgba(74, 85, 104, 0.3) 0%,
-    rgba(45, 55, 72, 0.3) 50%,
-    rgba(124, 58, 237, 0.3) 100%
-  );
-}
-
-.dark .auto-hide-scrollbar:hover::-webkit-scrollbar-thumb {
-  opacity: 1;
-  background: linear-gradient(
-    135deg,
-    rgba(113, 128, 150, 0.6) 0%,
-    rgba(74, 85, 104, 0.6) 50%,
-    rgba(124, 58, 237, 0.6) 100%
-  );
-}
-
-.dark .auto-hide-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(113, 128, 150, 0.8) 0%,
-    rgba(74, 85, 104, 0.8) 50%,
-    rgba(139, 92, 246, 0.8) 100%
-  );
+/* Hide scrollbar for IE, Edge and Firefox */
+html {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 /* 圆形动画主题切换 */

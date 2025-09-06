@@ -82,7 +82,6 @@ const ArticleSchema: Schema = new Schema(
 ArticleSchema.index({ status: 1, publishedAt: -1 });
 ArticleSchema.index({ category: 1 });
 ArticleSchema.index({ tags: 1 });
-ArticleSchema.index({ slug: 1 });
 
 // 在保存前自动设置发布时间
 ArticleSchema.pre("save", function (next) {
