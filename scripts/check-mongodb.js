@@ -14,7 +14,7 @@ if (fs.existsSync(envPath)) {
   });
 }
 
-const MONGODB_URL = process.env.MONGODB_URL;
+const MONGODB_URL = process.env.MONGODB_ROOT_URL;
 
 console.log('🔍 检查MongoDB连接...\n');
 

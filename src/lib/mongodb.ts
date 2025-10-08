@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const MONGODB_URL = process.env.MONGODB_URL;
+const MONGODB_URL = process.env.MONGODB_ROOT_URL as string;
 
 if (!MONGODB_URL) {
   throw new Error("请在环境变量中设置 MONGODB_URL");
@@ -35,6 +35,7 @@ class DatabaseManager {
     maxIdleTimeMS: 30000, // 最大空闲时间
     retryWrites: true, // 重试写操作
     retryReads: true, // 重试读操作
+    autoIndex: false, // 官方推荐在生产模式关闭自动索引
   };
 
   private constructor() {
@@ -78,7 +79,7 @@ class DatabaseManager {
 
     // 如果没有连接但有正在连接的 Promise，等待它完成
     if (!cached.promise) {
-      cached.promise = mongoose.connect(MONGODB_URL!, this.connectionOptions).then((mongoose) => {
+      cached.promise = mongoose.connect(MONGODB_URL, this.connectionOptions).then((mongoose) => {
         return mongoose;
       });
     }

@@ -1,3 +1,29 @@
+/**
+ * 如果浏览器支持 View Transition API，则使用平滑过渡效果执行更新回调
+ * 否则直接执行回调。支持从点击位置开始的径向过渡动画。
+ *
+ * @param updateCb - 需要执行的更新回调函数
+ * @param clickEvent - 可选的点击事件，用于计算过渡动画的起始位置
+ *
+ * @example
+ * ```typescript
+ * // 简单使用
+ * transitionViewIfSupported(() => {
+ *   // 更新 DOM 或状态
+ *   setCurrentPage('new-page');
+ * });
+ *
+ * // 带点击事件的径向过渡
+ * const handleClick = (event: MouseEvent) => {
+ *   transitionViewIfSupported(() => {
+ *     navigate('/new-route');
+ *   }, event);
+ * };
+ * ```
+ *
+ * @since 1.0.0
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Document/startViewTransition | View Transition API}
+ */
 export const transitionViewIfSupported = (updateCb: () => void, clickEvent?: MouseEvent | React.MouseEvent) => {
   // 检查用户是否偏好减少动画
   if (window.matchMedia(`(prefers-reduced-motion: reduce)`).matches) {

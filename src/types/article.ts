@@ -1,20 +1,22 @@
-// 在前端使用的类型
+/*
+ * @description 文章类型, 在前端页面内使用的类型
+ * @description 数据库中使用的模型在 @/models/Article.ts 中定义
+ * @description ArticleClient
+ */
 export interface Article {
-  _id: string;
-  title: string;
-  content: string;
-  excerpt: string;
-  tags: string[];
-  category: string;
-  status: "draft" | "published" | "archived";
-  slug: string;
-  viewCount: number;
-  likeCount: number;
-  readingTime: number;
-  coverImageUrl?: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt?: string;
+  title: string; // 标题
+  content: string; // 具体内容，需要经过转义，防止显示错误
+  excerpt: string; // 摘要,到时候由AI生成
+  tags: string[]; // 标签
+  category: string; // 分类
+  status: "draft" | "published" | "archived"; // 状态
+  slug: string; // 唯一标识，要确保在数据库中唯一
+  readingTime: number; // 阅读时间
+  viewCount: number; // 浏览次数
+  coverImageUrl?: string; // 封面图片
+  createdAt: string | Date; // 创建时间
+  updatedAt: string | Date; // 更新时间
+  publishedAt?: string | Date; // 发布时间，创建了，不一定立刻发布，所以发布时间和创建时间不一样
 }
 
 export interface CategoryWithCount {
@@ -28,23 +30,6 @@ export interface TagWithCount {
 }
 
 // MongoDB 文档类型（包含原始的 Date 和 ObjectId）
-export interface ArticleDocument {
-  _id: string;
-  title: string;
-  content: string;
-  excerpt: string;
-  tags: string[];
-  category: string;
-  status: "draft" | "published" | "archived";
-  slug: string;
-  viewCount: number;
-  likeCount: number;
-  readingTime: number;
-  coverImageUrl?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt?: Date;
-}
 
 // 查询过滤器类型
 export interface ArticleFilter {

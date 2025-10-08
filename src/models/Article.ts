@@ -1,12 +1,18 @@
 import type { Article } from "@/types/article";
-import mongoose, { Document, Schema } from "mongoose";
+import { escapeHTML } from "@/utils/transform";
+import mongoose, { HydratedDocument, Model, Schema, Types } from "mongoose";
 
 // 数据库文档接口：基于Article类型，但将日期字段改为Date类型
-export interface IArticle extends Document, Omit<Article, "_id" | "createdAt" | "updatedAt" | "publishedAt"> {
+// 数据在MongoDB中存储时的类型
+interface IArticle extends Omit<Article, "createdAt" | "updatedAt" | "publishedAt"> {
+  _id: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
   publishedAt?: Date;
 }
+
+// a hydrated Mongoose document, with methods, virtuals, and other Mongoose-specific features
+export type ArticleDocument = HydratedDocument<IArticle>;
 
 // 定义文章模式
 const ArticleSchema: Schema = new Schema(
@@ -15,7 +21,7 @@ const ArticleSchema: Schema = new Schema(
       type: String,
       required: [true, "标题是必填项"],
       trim: true,
-      maxlength: [200, "标题不能超过200个字符"],
+      maxlength: [100, "标题不能超过100个字符"],
     },
     content: {
       type: String,
@@ -23,17 +29,13 @@ const ArticleSchema: Schema = new Schema(
     },
     excerpt: {
       type: String,
-      maxlength: [1000, "摘要不能超过1000个字符"],
+      trim: true,
+      default: "", // Article 类型为必填，这里默认空串，创建时可不传
     },
     tags: {
       type: [String],
       default: [],
-      // validate: {
-      //   validator: function (tags: string[]) {
-      //     return tags.length <= 10;
-      //   },
-      //   message: "标签数量不能超过10个",
-      // },
+      set: (tags: string[]) => Array.from(new Set((tags || []).map((t) => String(t).trim()).filter(Boolean))),
     },
     category: {
       type: String,
@@ -50,6 +52,7 @@ const ArticleSchema: Schema = new Schema(
     },
     readingTime: {
       type: Number,
+      default: 0,
       min: [0, "阅读时间不能为负数"],
     },
     viewCount: {
@@ -57,17 +60,13 @@ const ArticleSchema: Schema = new Schema(
       default: 0,
       min: [0, "浏览次数不能为负数"],
     },
-    likeCount: {
-      type: Number,
-      default: 0,
-      min: [0, "点赞次数不能为负数"],
-    },
     slug: {
       type: String,
       required: [true, "URL slug是必填项"],
-      unique: true,
+      unique: true, // 唯一标识，要确保在数据库中唯一
       trim: true,
       lowercase: true,
+      match: [/^[a-z0-9-]+$/, "URL slug只能包含小写字母、数字和连字符"],
     },
     coverImageUrl: {
       type: String,
@@ -78,20 +77,29 @@ const ArticleSchema: Schema = new Schema(
   }
 );
 
-// 添加索引以提高查询性能
-ArticleSchema.index({ status: 1, publishedAt: -1 });
-ArticleSchema.index({ category: 1 });
-ArticleSchema.index({ tags: 1 });
-
-// 在保存前自动设置发布时间
+// 在保存前自动设置发布时间、计算阅读时长并转义content内容
 ArticleSchema.pre("save", function (next) {
+  // 自动设置发布时间
   if (this.status === "published" && !this.publishedAt) {
     this.publishedAt = new Date();
   }
+
+  // 自动转义content内容，防止XSS攻击
+  if (this.isModified("content") && this.content && typeof this.content === "string") {
+    (this.content as string) = escapeHTML(this.content);
+    // 根据内容长度粗略计算阅读时间（约250字符/分钟）
+    this.readingTime = Math.max(0, Math.ceil(this.content.length / 250));
+  }
+
+  // 如果未设置阅读时间，则按现有内容估算
+  if ((this.readingTime === undefined || this.readingTime === null) && typeof this.content === "string") {
+    this.readingTime = Math.max(0, Math.ceil(this.content.length / 250));
+  }
+
   next();
 });
 
 // 检查模型是否已经存在，避免重复编译
-const Article = mongoose.models.Article || mongoose.model<IArticle>("Article", ArticleSchema);
+const ArticleModel: Model<IArticle> = mongoose.models?.Article || mongoose.model<IArticle>("Article", ArticleSchema);
 
-export default Article;
+export default ArticleModel;

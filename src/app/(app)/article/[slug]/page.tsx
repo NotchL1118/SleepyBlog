@@ -1,4 +1,4 @@
-import { getArticle } from "@/actions/article";
+import { getArticleBySlug } from "@/actions/article";
 import { mdxComponents } from "@/mdx-components";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
@@ -12,7 +12,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
 
   // 获取文章内容，增加浏览次数
-  const article = (await getArticle(slug, true))?.data;
+  const article = (await getArticleBySlug(slug, true))?.data;
 
   if (!article) {
     notFound();
@@ -28,9 +28,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
               <span>分类: {article.category}</span>
-              {article.readingTime && <span>阅读时间: {article.readingTime} 分钟</span>}
-              <span>浏览: {article.viewCount} 次</span>
-              <span>点赞: {article.likeCount} 次</span>
+              {!!article.readingTime && <span>阅读时间: {article.readingTime} 分钟</span>}
               {article.publishedAt && (
                 <span>发布时间: {new Date(article.publishedAt).toLocaleDateString("zh-CN")}</span>
               )}

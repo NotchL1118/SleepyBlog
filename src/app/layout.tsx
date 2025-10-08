@@ -23,7 +23,7 @@ export default function RootLayout({
       <head>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-gb-web@latest/style.css" />
       </head>
-      <body className="antialiased">
+      <body className="antialiased" suppressHydrationWarning>
         <RootProvider>{children}</RootProvider>
         <SpeedInsights />
       </body>

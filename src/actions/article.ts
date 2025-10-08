@@ -1,9 +1,9 @@
 "use server";
 import connectToDatabase from "@/lib/mongodb";
 import ServerActionBuilder from "@/lib/server-action";
-import Article from "@/models/Article";
+import ArticleModel from "@/models/Article";
 import ArticleRepository from "@/repositories/article-repository";
-import type { CategoryWithCount, TagWithCount } from "@/types/article";
+import type { Article, CategoryWithCount, TagWithCount } from "@/types/article";
 import type { PaginatedData, ServerActionResponse } from "@/types/server-actions-response";
 
 /**
@@ -68,7 +68,10 @@ export async function getTags(): Promise<ServerActionResponse<TagWithCount[]>> {
 /**
  * 获取单篇文章
  */
-export async function getArticle(slug: string, incrementView = false): Promise<ServerActionResponse<Article>> {
+export async function getArticleBySlug(
+  slug: string,
+  incrementView = false
+): Promise<ServerActionResponse<Article | null>> {
   return ServerActionBuilder.execute(async () => await ArticleRepository.getBySlug(slug, incrementView), {
     successMessage: "获取文章成功",
     onError: (error) => console.error("Server Action - 获取文章失败:", error),
@@ -100,19 +103,18 @@ export async function initializeTestData(force: boolean = false): Promise<Server
   return ServerActionBuilder.execute(
     async () => {
       await connectToDatabase();
-
       // 检查是否已有数据
-      const existingCount = await Article.countDocuments();
+      const existingCount = await ArticleModel.countDocuments();
 
       if (existingCount > 0 && !force) {
         throw new Error("数据库中已存在文章数据，无需重复初始化");
       }
 
       if (existingCount > 0 && force) {
-        await Article.deleteMany({});
+        await ArticleModel.deleteMany({});
       }
 
-      // 创建示例文章
+      // 创建示例文章 - 使用逐个保存的方式以触发 pre save 钩子
       const sampleArticles = [
         {
           title: "Next.js 15 新特性详解",
@@ -138,12 +140,189 @@ export async function initializeTestData(force: boolean = false): Promise<Server
         },
       ];
 
-      const createdArticles = await Article.insertMany(sampleArticles);
+      // 逐个保存文章以触发 pre save 钩子进行内容转义
+      const createdArticles = [];
+      for (const articleData of sampleArticles) {
+        const article = new ArticleModel(articleData);
+        const savedArticle = await article.save();
+        createdArticles.push(savedArticle);
+      }
       return `成功创建 ${createdArticles.length} 篇示例文章`;
     },
     {
       successMessage: "数据初始化成功",
       errorMessage: "数据初始化失败",
+    }
+  );
+}
+
+// ============ Dashboard 相关 Server Actions ============
+
+/**
+ * 获取仪表板统计数据
+ */
+export async function getDashboardStats(): Promise<
+  ServerActionResponse<{
+    articles: {
+      total: number;
+      published: number;
+      draft: number;
+      archived: number;
+    };
+    views: {
+      total: number;
+      thisMonth: number;
+      thisWeek: number;
+      today: number;
+    };
+    categories: Array<{ name: string; count: number }>;
+    tags: Array<{ name: string; count: number }>;
+    recentArticles: Array<{
+      _id: string;
+      title: string;
+      status: string;
+      createdAt: string;
+      viewCount: number;
+    }>;
+  }>
+> {
+  return ServerActionBuilder.execute(async () => await ArticleRepository.getDashboardStats(), {
+    successMessage: "获取统计数据成功",
+    errorMessage: "获取统计数据失败",
+    onError: (error) => console.error("Server Action - 获取统计数据失败:", error),
+  });
+}
+
+/**
+ * 获取文章列表（支持更多筛选条件）
+ */
+export async function getArticleListAdvanced(params?: {
+  page?: number;
+  limit?: number;
+  status?: "published" | "draft" | "archived" | "all";
+  category?: string;
+  tag?: string;
+  search?: string;
+  sortBy?: "createdAt" | "updatedAt" | "publishedAt" | "viewCount";
+  sortOrder?: "asc" | "desc";
+}): Promise<ServerActionResponse<PaginatedData<Article>>> {
+  return ServerActionBuilder.execute(async () => await ArticleRepository.getListAdvanced(params), {
+    successMessage: "获取文章列表成功",
+    errorMessage: "获取文章列表失败",
+    onError: (error) => console.error("Server Action - 获取文章列表失败:", error),
+  });
+}
+
+/**
+ * 根据ID获取文章
+ */
+export async function getArticleById(id: string): Promise<ServerActionResponse<Article | null>> {
+  return ServerActionBuilder.execute(async () => await ArticleRepository.getById(id), {
+    successMessage: "获取文章成功",
+    errorMessage: "获取文章失败",
+    onError: (error) => console.error("Server Action - 获取文章失败:", error),
+  });
+}
+
+/**
+ * 创建文章
+ */
+export async function createArticle(data: {
+  title: string;
+  content: string;
+  excerpt?: string;
+  tags: string[];
+  category: string;
+  status: "draft" | "published" | "archived";
+  slug: string;
+  coverImageUrl?: string;
+}): Promise<ServerActionResponse<Article>> {
+  return ServerActionBuilder.execute(async () => await ArticleRepository.create(data), {
+    successMessage: "文章创建成功",
+    errorMessage: "文章创建失败",
+    onError: (error) => console.error("Server Action - 创建文章失败:", error),
+  });
+}
+
+/**
+ * 更新文章
+ */
+export async function updateArticle(
+  id: string,
+  data: {
+    title?: string;
+    content?: string;
+    excerpt?: string;
+    tags?: string[];
+    category?: string;
+    status?: "draft" | "published" | "archived";
+    slug?: string;
+    coverImageUrl?: string;
+  }
+): Promise<ServerActionResponse<Article | null>> {
+  return ServerActionBuilder.execute(async () => await ArticleRepository.update(id, data), {
+    successMessage: "文章更新成功",
+    errorMessage: "文章更新失败",
+    onError: (error) => console.error("Server Action - 更新文章失败:", error),
+  });
+}
+
+/**
+ * 删除文章
+ */
+export async function deleteArticle(id: string): Promise<ServerActionResponse<boolean>> {
+  return ServerActionBuilder.execute(async () => await ArticleRepository.delete(id), {
+    successMessage: "文章删除成功",
+    errorMessage: "文章删除失败",
+    onError: (error) => console.error("Server Action - 删除文章失败:", error),
+  });
+}
+
+/**
+ * 批量操作文章
+ */
+export async function bulkOperateArticles(
+  action: "delete" | "publish" | "archive" | "draft" | "updateCategory" | "updateTags",
+  articleIds: string[],
+  data?: { category?: string; tags?: string[] }
+): Promise<ServerActionResponse<{ success: boolean; message: string }>> {
+  return ServerActionBuilder.execute(async () => await ArticleRepository.bulkOperation(action, articleIds, data), {
+    successMessage: "批量操作成功",
+    errorMessage: "批量操作失败",
+    onError: (error) => console.error("Server Action - 批量操作失败:", error),
+  });
+}
+
+/**
+ * 验证管理员登录
+ */
+export async function validateAdminLogin(
+  username: string,
+  password: string
+): Promise<ServerActionResponse<{ isValid: boolean }>> {
+  return ServerActionBuilder.execute(
+    async () => {
+      // 从环境变量获取管理员凭据
+      const adminUsername = process.env.ADMIN_USERNAME;
+      const adminPassword = process.env.ADMIN_PASSWORD;
+
+      if (!adminUsername || !adminPassword) {
+        throw new Error("服务器配置错误：未设置管理员凭据");
+      }
+
+      // 验证凭据
+      const isValid = username === adminUsername && password === adminPassword;
+
+      if (!isValid) {
+        throw new Error("用户名或密码错误");
+      }
+
+      return { isValid };
+    },
+    {
+      successMessage: "登录成功",
+      errorMessage: "登录失败",
+      onError: (error) => console.error("Server Action - 登录失败:", error),
     }
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 import { clsx } from "clsx";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./GlowEffect.module.scss";
 
 interface GlowEffectProps {
@@ -13,22 +13,17 @@ export default function GlowEffect({ children, className }: GlowEffectProps) {
   const glowRef = useRef<HTMLDivElement | null>(null);
   const [showGlow, setShowGlow] = useState(false);
 
-  const handleMouseMove = useCallback<React.MouseEventHandler<HTMLDivElement>>(
-    (event) => {
-      if (!containerRef.current || !glowRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = Math.max(0, Math.min(event.clientX - rect.left, rect.width));
-      glowRef.current.style.setProperty("--x", `${x}px`);
-      if (!showGlow) setShowGlow(true);
-    },
-    [showGlow]
-  );
+  const handleMouseMove: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    if (!containerRef.current || !glowRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    glowRef.current.style.setProperty("--x", `${x}px`);
+    if (!showGlow) setShowGlow(true);
+  };
 
-  const handleMouseLeave = useCallback<React.MouseEventHandler<HTMLDivElement>>(() => {
-    if (!glowRef.current) return;
-    glowRef.current.style.removeProperty("--x");
+  const handleMouseLeave: React.MouseEventHandler<HTMLDivElement> = () => {
     setShowGlow(false);
-  }, []);
+  };
 
   return (
     <div

@@ -38,7 +38,13 @@ export const mdxComponents: MDXComponents = {
     <ul className="mb-4 list-inside list-disc space-y-2 text-gray-700 dark:text-gray-300">{children}</ul>
   ),
   ol: ({ children }) => (
-    <ol className="mb-4 list-inside list-decimal space-y-2 text-gray-700 dark:text-gray-300">{children}</ol>
+    <ol
+      // tailwindcss清空默认样式的优先级太高了,设置class不生效,所以用style
+      style={{ listStyleType: "decimal", listStylePosition: "inside" }}
+      className="mb-4 space-y-2 pl-6 text-gray-700 marker:font-semibold marker:text-blue-600 dark:text-gray-300 dark:marker:text-blue-400"
+    >
+      {children}
+    </ol>
   ),
   li: ({ children }) => <li className="leading-relaxed">{children}</li>,
   code: ({ className, children, ...props }) => {
@@ -80,9 +86,12 @@ export const mdxComponents: MDXComponents = {
       return <CodeBlock language={language}>{cleanCode}</CodeBlock>;
     }
 
-    // 如果不是代码块，使用默认的 pre 样式
+    // 如果不是代码块，使用随主题变化的样式
     return (
-      <pre className="my-6 overflow-x-auto rounded-lg border border-gray-700 bg-gray-900 p-4 text-gray-100" {...props}>
+      <pre
+        className="my-6 overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+        {...props}
+      >
         {children}
       </pre>
     );
