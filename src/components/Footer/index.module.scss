@@ -1,0 +1,56 @@
+// 不规则圆形变形动画
+@keyframes morph {
+  0% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  25% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+  50% {
+    border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+  }
+  75% {
+    border-radius: 60% 40% 60% 40% / 70% 30% 50% 60%;
+  }
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+}
+
+// 旋转动画
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// 头像容器样式
+.avatarContainer {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  animation: morph 8s ease-in-out infinite, rotate 20s linear infinite;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+// 图片包裹层，反向旋转抵消外层旋转
+.avatarImageWrapper {
+  position: absolute;
+  top: -25%;
+  left: -25%;
+  width: 150%;
+  height: 150%;
+  animation: rotate 20s linear infinite reverse;
+}
+
+// 响应式调整
+@media (max-width: 768px) {
+  .avatarContainer {
+    width: 60px;
+    height: 60px;
+  }
+}

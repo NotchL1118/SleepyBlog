@@ -1,4 +1,4 @@
-import connectToDatabase from "@/lib/mongodb";
+import connectToDatabase, { isDatabaseConnected } from "@/lib/mongodb";
 
 export const withDatabaseConnection: () => MethodDecorator =
   () =>
@@ -14,8 +14,9 @@ export const withDatabaseConnection: () => MethodDecorator =
     const originalMethod = descriptor.value as (...args: unknown[]) => unknown;
 
     const wrapped = async function (this: unknown, ...args: unknown[]): Promise<unknown> {
-      console.log("🔐withDatabaseConnection---->");
-      await connectToDatabase();
+      if (!isDatabaseConnected()) {
+        await connectToDatabase();
+      }
       return originalMethod.apply(this, args);
     };
 

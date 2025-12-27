@@ -1,11 +1,9 @@
 import type { MDXComponents } from "mdx/types";
-import { CodeBlock, Highlight, ImageCard } from "./components/MDX";
+import { CodeBlock, ImageCard } from "./components/MDX";
 
 // 导出组件配置对象
 export const mdxComponents: MDXComponents = {
   // 自定义组件
-  ImageCard,
-  Highlight,
   // 增强的默认HTML元素
   h1: ({ children }) => (
     <h1 className="mb-6 mt-8 text-4xl font-bold text-gray-900 first:mt-0 dark:text-gray-100">{children}</h1>
@@ -22,18 +20,20 @@ export const mdxComponents: MDXComponents = {
     <h4 className="mb-2 mt-4 text-xl font-semibold text-gray-900 first:mt-0 dark:text-gray-100">{children}</h4>
   ),
   p: ({ children }) => <p className="mb-4 leading-relaxed text-gray-700 dark:text-gray-300">{children}</p>,
-  // 将 img 标签映射到 ImageCard 组件
-  img: ({ src, alt, title, width, height, description, ...props }) => (
-    <ImageCard
-      src={src || ""}
-      alt={alt || ""}
-      title={title}
-      description={(props["data-description"] as string) || description}
-      width={width ? Number(width) : undefined}
-      height={height ? Number(height) : undefined}
-      className={props.className as string}
-    />
-  ),
+  img: ({ src, alt, title, width, height, description, ...props }) => {
+    const { style, className, ...restProps } = props;
+    return (
+      <ImageCard
+        src={src || ""}
+        alt={alt || ""}
+        title={title}
+        description={(restProps["data-description"] as string) || description}
+        width={width ? Number(width) : undefined}
+        height={height ? Number(height) : undefined}
+        className={className as string}
+      />
+    );
+  },
   ul: ({ children }) => (
     <ul className="mb-4 list-inside list-disc space-y-2 text-gray-700 dark:text-gray-300">{children}</ul>
   ),

@@ -1,10 +1,15 @@
-import type { Article } from "@/types/article";
-import { escapeHTML } from "@/utils/transform";
+import type { IArticle } from "@/types/article";
+import { calculateReadingTime } from "@/utils/reading-time";
 import mongoose, { HydratedDocument, Model, Schema, Types } from "mongoose";
 
-// 数据库文档接口：基于Article类型，但将日期字段改为Date类型
-// 数据在MongoDB中存储时的类型
-interface IArticle extends Omit<Article, "createdAt" | "updatedAt" | "publishedAt"> {
+/**
+ * 文章实体接口 - MongoDB 数据库存储格式
+ *
+ * 表示文章在 MongoDB 中的实际存储结构。
+ * 与前端使用的 IArticle 类型的主要区别是日期字段使用 Date 类型而非字符串，
+ * 并包含 MongoDB 的 ObjectId 类型的 _id 字段。
+ */
+export interface IArticleEntity extends Omit<IArticle, "_id" | "createdAt" | "updatedAt" | "publishedAt"> {
   _id: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -12,7 +17,7 @@ interface IArticle extends Omit<Article, "createdAt" | "updatedAt" | "publishedA
 }
 
 // a hydrated Mongoose document, with methods, virtuals, and other Mongoose-specific features
-export type ArticleDocument = HydratedDocument<IArticle>;
+export type IArticleDocument = HydratedDocument<IArticleEntity>;
 
 // 定义文章模式
 const ArticleSchema: Schema = new Schema(
@@ -77,29 +82,28 @@ const ArticleSchema: Schema = new Schema(
   }
 );
 
-// 在保存前自动设置发布时间、计算阅读时长并转义content内容
+// 在保存前自动设置发布时间、计算阅读时长
 ArticleSchema.pre("save", function (next) {
   // 自动设置发布时间
   if (this.status === "published" && !this.publishedAt) {
     this.publishedAt = new Date();
   }
 
-  // 自动转义content内容，防止XSS攻击
+  // 使用高级算法计算阅读时间（区分中英文、内容类型加权）
   if (this.isModified("content") && this.content && typeof this.content === "string") {
-    (this.content as string) = escapeHTML(this.content);
-    // 根据内容长度粗略计算阅读时间（约250字符/分钟）
-    this.readingTime = Math.max(0, Math.ceil(this.content.length / 250));
+    this.readingTime = calculateReadingTime(this.content);
   }
 
   // 如果未设置阅读时间，则按现有内容估算
   if ((this.readingTime === undefined || this.readingTime === null) && typeof this.content === "string") {
-    this.readingTime = Math.max(0, Math.ceil(this.content.length / 250));
+    this.readingTime = calculateReadingTime(this.content);
   }
 
   next();
 });
 
 // 检查模型是否已经存在，避免重复编译
-const ArticleModel: Model<IArticle> = mongoose.models?.Article || mongoose.model<IArticle>("Article", ArticleSchema);
+const ArticleModel: Model<IArticleEntity> =
+  mongoose.models?.Article || mongoose.model<IArticleEntity>("Article", ArticleSchema);
 
 export default ArticleModel;

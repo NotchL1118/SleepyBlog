@@ -12,7 +12,10 @@ export default function Header() {
   return (
     <header className={clsx("headerHeight fixed left-0 right-0 top-0 z-[999] backdrop-blur-xl", Styles.headerSurface)}>
       <GlowEffect className="mx-auto flex h-full w-4/5 items-center justify-between sm:max-w-screen-md lg:w-full lg:max-w-screen-xl">
-        <Link href="/" className="font-extrabold">
+        <Link
+          href="/"
+          className="font-extrabold transition-transform duration-300 ease-out hover:scale-110 active:scale-95"
+        >
           S.Y.Blog
         </Link>
         <div className="absolute left-1/2 top-1/2 hidden translate-x-[-50%] translate-y-[-50%] flex-row items-center lg:flex">

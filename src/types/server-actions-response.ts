@@ -7,7 +7,6 @@ export type ServerActionResponse<T = unknown> =
     }
   | {
       success: false;
-      error: string;
       data?: undefined;
       message?: string;
     };

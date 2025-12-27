@@ -14,7 +14,7 @@ interface GoalItem {
 }
 
 const goals: GoalItem[] = [
-  { id: 1, content: "脱单", status: "pending", progress: 20, category: "生活" },
+  { id: 1, content: "脱单", status: "pending", progress: 0, category: "生活" },
   { id: 2, content: "搭完博客", status: "inProgress", progress: 75, category: "技术" },
   { id: 3, content: "学习英语", status: "inProgress", progress: 40, category: "学习" },
   { id: 4, content: "学习一门新的语言", status: "pending", progress: 10, category: "学习" },

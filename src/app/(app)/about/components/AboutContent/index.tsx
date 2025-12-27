@@ -132,18 +132,6 @@ export default function AboutContent() {
             </div>
           </motion.div>
         </motion.div>
-
-        {/* 底部装饰 */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.2 }}
-          className="mt-8 text-center"
-        >
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-gradient-to-r from-blue-500/10 to-purple-500/10 px-6 py-3 text-sm font-medium text-blue-600 backdrop-blur-sm dark:border-blue-800 dark:text-blue-400">
-            <span>✨ 感谢您的访问，希望您喜欢这个页面 ✨</span>
-          </div>
-        </motion.div>
       </div>
     </div>
   );

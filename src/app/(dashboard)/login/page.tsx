@@ -1,6 +1,6 @@
 "use client";
 
-import { validateAdminLogin } from "@/actions/article";
+import { validateAdminLogin } from "@/actions/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -65,7 +65,7 @@ export default function LoginPage() {
         // 重定向到dashboard
         router.replace("/dashboard");
       } else {
-        setError(result.error || result.message || "登录失败");
+        setError(result.message || "登录失败");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -184,8 +184,6 @@ export default function LoginPage() {
             )}
           </button>
         </form>
-
-        <div className="text-center text-xs text-gray-500">请使用环境变量中配置的管理员账户登录</div>
       </div>
     </div>
   );

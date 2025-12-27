@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import scrollbar from "tailwind-scrollbar";
 
 export default {
   content: [
@@ -17,6 +18,6 @@ export default {
       LXGW: ["LXGW WenKai GB", "sans-serif"],
     },
   },
-  plugins: [],
+  plugins: [scrollbar({ nocompatible: true })],
   darkMode: "selector",
 } satisfies Config;

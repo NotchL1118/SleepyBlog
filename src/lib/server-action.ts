@@ -23,7 +23,7 @@ export default class ServerActionBuilder {
     const errorMessage = error instanceof Error ? error.message : error;
     return {
       success: false,
-      error: errorMessage,
+      data: void 0,
       message: message || errorMessage,
     };
   }

@@ -1,6 +1,6 @@
-import ArticleList from "@/components/ArticleList";
+import ArticleList from "@/app/components/ArticleList";
+import UserProfile from "@/app/components/UserProfile";
 import HeroBanner from "@/components/HeroBanner";
-import UserProfile from "@/components/UserProfile";
 
 export default function Index() {
   return (

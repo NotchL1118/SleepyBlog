@@ -1,12 +1,28 @@
 import { withDatabaseConnection } from "@/lib/decorators/database";
 import ArticleModel from "@/models/Article";
-import type { ArticleFilter, Article as ArticleType, CategoryWithCount, TagWithCount } from "@/types/article";
+import type { ArticleFilter, CategoryWithCount, IArticle, TagWithCount } from "@/types/article";
 import type { PaginatedData } from "@/types/server-actions-response";
-import { ArticleDocument } from "./../models/Article";
+import { calculateReadingTime } from "@/utils/reading-time";
+import { IArticleDocument } from "./../models/Article";
+
+/**
+ * 将MongoDB文档序列化为纯对象，适合传递给Client Components
+ */
+function serializeArticle(doc: IArticleDocument): IArticle {
+  const obj = doc.toObject();
+  return {
+    ...obj,
+    _id: obj._id.toString(),
+    createdAt: obj.createdAt.toISOString(),
+    updatedAt: obj.updatedAt.toISOString(),
+    publishedAt: obj.publishedAt?.toISOString(),
+  } as IArticle;
+}
 
 /**
  * 文章数据访问层
  * 提供文章相关的直接操作数据库的方法
+ * 单一职责，该类中的方法只像数据库中保存数据，不做过多处理
  */
 export default class ArticleRepository {
   /**
@@ -16,7 +32,7 @@ export default class ArticleRepository {
    * @returns 文章数据或null
    */
   @withDatabaseConnection()
-  static async getBySlug(slug: string, incrementView = false): Promise<ArticleType | null> {
+  static async getBySlug(slug: string, incrementView = false): Promise<IArticle | null> {
     try {
       const article = await ArticleModel.findOne({ slug, status: "published" });
 
@@ -31,9 +47,10 @@ export default class ArticleRepository {
         article.viewCount += 1;
       }
 
-      return article.toObject();
+      return serializeArticle(article);
     } catch (error) {
-      return null;
+      console.error("根据slug获取文章失败:", error);
+      throw error;
     }
   }
 
@@ -49,7 +66,28 @@ export default class ArticleRepository {
       return !!result;
     } catch (error) {
       console.error("增加浏览次数失败:", error);
-      throw new Error("增加浏览次数失败");
+      throw error;
+    }
+  }
+
+  /**
+   * 检查 slug 是否已存在
+   * @param slug 要检查的 slug
+   * @param excludeId 排除的文章 ID（用于编辑时排除自身）
+   * @returns true 表示已存在，false 表示不存在
+   */
+  @withDatabaseConnection()
+  static async checkSlugExists(slug: string, excludeId?: string): Promise<boolean> {
+    try {
+      const query: { slug: string; _id?: { $ne: string } } = { slug };
+      if (excludeId) {
+        query._id = { $ne: excludeId };
+      }
+      const existing = await ArticleModel.findOne(query);
+      return !!existing;
+    } catch (error) {
+      console.error("检查slug是否存在失败:", error);
+      throw error;
     }
   }
 
@@ -68,7 +106,7 @@ export default class ArticleRepository {
       tag?: string;
       search?: string;
     } = {}
-  ): Promise<PaginatedData<ArticleType>> {
+  ): Promise<PaginatedData<IArticle>> {
     try {
       const { page = 1, limit = 10, status = "published", category, tag, search } = params;
 
@@ -102,9 +140,7 @@ export default class ArticleRepository {
 
       const totalPages = Math.ceil(total / limit);
       return {
-        items: articles.map((article: ArticleDocument): ArticleType => {
-          return article.toObject();
-        }),
+        items: articles.map((article: IArticleDocument) => serializeArticle(article)),
         pagination: {
           page,
           limit,
@@ -116,17 +152,7 @@ export default class ArticleRepository {
       };
     } catch (error) {
       console.error("获取文章列表失败:", error);
-      return {
-        items: [],
-        pagination: {
-          page: 1,
-          limit: 10,
-          total: 0,
-          totalPages: 0,
-          hasNext: false,
-          hasPrev: false,
-        },
-      };
+      throw error;
     }
   }
 
@@ -147,7 +173,7 @@ export default class ArticleRepository {
       return categories;
     } catch (error) {
       console.error("获取分类失败:", error);
-      return [];
+      throw error;
     }
   }
 
@@ -169,7 +195,7 @@ export default class ArticleRepository {
       return tags;
     } catch (error) {
       console.error("获取标签失败:", error);
-      return [];
+      throw error;
     }
   }
 
@@ -179,18 +205,18 @@ export default class ArticleRepository {
    * @returns 文章数据
    */
   @withDatabaseConnection()
-  static async getById(id: string): Promise<ArticleType | null> {
+  static async getById(id: string): Promise<IArticle | null> {
     try {
       const article = await ArticleModel.findById(id);
 
       if (!article) {
-        return null;
+        throw new Error("文章不存在");
       }
 
-      return article.toObject();
+      return serializeArticle(article);
     } catch (error) {
       console.error("根据ID获取文章失败:", error);
-      return null;
+      throw error;
     }
   }
 
@@ -200,25 +226,16 @@ export default class ArticleRepository {
    * @returns 创建的文章
    */
   @withDatabaseConnection()
-  static async create(data: {
-    title: string;
-    content: string;
-    excerpt?: string;
-    tags: string[];
-    category: string;
-    status: "draft" | "published" | "archived";
-    slug: string;
-    coverImageUrl?: string;
-  }): Promise<ArticleType> {
+  static async create(data: IArticle): Promise<IArticle> {
     try {
       // 检查slug是否已存在
       const existingArticle = await ArticleModel.findOne({ slug: data.slug });
       if (existingArticle) {
-        throw new Error("URL slug 已存在，请使用其他值");
+        throw new Error("当前 slug 已存在，请使用其他值");
       }
 
-      // 计算阅读时间（大约每分钟250字）
-      const readingTime = Math.ceil(data.content.length / 250);
+      // 使用高级算法计算阅读时间
+      const readingTime = calculateReadingTime(data.content);
 
       // 如果没有提供摘要，自动生成
       const excerpt = data.excerpt || data.content.substring(0, 200) + "...";
@@ -235,13 +252,7 @@ export default class ArticleRepository {
       const article = new ArticleModel(articleData);
       const savedArticle = await article.save();
 
-      return {
-        ...savedArticle.toObject(),
-        _id: savedArticle._id.toString(),
-        createdAt: savedArticle.createdAt.toISOString(),
-        updatedAt: savedArticle.updatedAt.toISOString(),
-        publishedAt: savedArticle.publishedAt?.toISOString(),
-      };
+      return serializeArticle(savedArticle);
     } catch (error) {
       console.error("创建文章失败:", error);
       throw error;
@@ -267,7 +278,7 @@ export default class ArticleRepository {
       slug?: string;
       coverImageUrl?: string;
     }
-  ): Promise<ArticleType | null> {
+  ): Promise<IArticle | null> {
     try {
       // 如果更新slug，检查是否与其他文章冲突
       if (data.slug) {
@@ -281,10 +292,10 @@ export default class ArticleRepository {
         }
       }
 
-      // 计算阅读时间
+      // 使用高级算法计算阅读时间
       const updateData: Record<string, unknown> = { ...data };
       if (data.content) {
-        updateData.readingTime = Math.ceil(data.content.length / 250);
+        updateData.readingTime = calculateReadingTime(data.content);
       }
 
       // 如果状态改为发布且之前未发布，设置发布时间
@@ -305,7 +316,7 @@ export default class ArticleRepository {
         return null;
       }
 
-      return article.toObject();
+      return serializeArticle(article);
     } catch (error) {
       console.error("更新文章失败:", error);
       throw error;
@@ -500,7 +511,6 @@ export default class ArticleRepository {
         categories: categories || [],
         tags: tags || [],
         recentArticles: recentArticles.map((article) => ({
-          ...article.toObject(),
           _id: article._id.toString(),
           title: article.title,
           status: article.status,
@@ -531,7 +541,7 @@ export default class ArticleRepository {
       sortBy?: "createdAt" | "updatedAt" | "publishedAt" | "viewCount";
       sortOrder?: "asc" | "desc";
     } = {}
-  ): Promise<PaginatedData<ArticleType>> {
+  ): Promise<PaginatedData<IArticle>> {
     try {
       const {
         page = 1,
@@ -581,7 +591,7 @@ export default class ArticleRepository {
           .skip(skip)
           .limit(limit)
           .select("title excerpt category status tags slug viewCount likeCount createdAt updatedAt publishedAt")
-          .lean<ArticleDocument[]>(),
+          .lean<IArticleDocument[]>(),
         ArticleModel.countDocuments(filter),
       ]);
 
@@ -589,8 +599,9 @@ export default class ArticleRepository {
 
       return {
         items: articles.map(
-          (article): ArticleType => ({
+          (article): IArticle => ({
             ...article,
+            _id: article._id.toString(),
             createdAt: article.createdAt.toISOString(),
             updatedAt: article.updatedAt.toISOString(),
             publishedAt: article.publishedAt?.toISOString(),

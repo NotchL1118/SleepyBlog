@@ -166,19 +166,21 @@ SiteSettingsSchema.index({ siteName: 1 });
 SiteSettingsSchema.pre("save", function (next) {
   // 清理社交媒体链接中的空字符串
   if (this.socialLinks) {
-    Object.keys(this.socialLinks).forEach((key) => {
-      if (this.socialLinks[key as keyof typeof this.socialLinks] === "") {
-        this.socialLinks[key as keyof typeof this.socialLinks] = undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const links = this.socialLinks as any;
+    Object.keys(links).forEach((key) => {
+      if (links[key] === "") {
+        links[key] = undefined;
       }
     });
   }
 
   // 清理空的关键词
-  if (this.siteKeywords) {
+  if (this.siteKeywords && Array.isArray(this.siteKeywords)) {
     this.siteKeywords = this.siteKeywords.filter((keyword: string) => keyword.trim() !== "");
   }
 
-  if (this.defaultMetaKeywords) {
+  if (this.defaultMetaKeywords && Array.isArray(this.defaultMetaKeywords)) {
     this.defaultMetaKeywords = this.defaultMetaKeywords.filter((keyword: string) => keyword.trim() !== "");
   }
 

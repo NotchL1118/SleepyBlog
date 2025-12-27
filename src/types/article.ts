@@ -3,7 +3,8 @@
  * @description 数据库中使用的模型在 @/models/Article.ts 中定义
  * @description ArticleClient
  */
-export interface Article {
+export interface IArticle {
+  _id?: string; // 数据库中的 _id, 只有下发时才会存在
   title: string; // 标题
   content: string; // 具体内容，需要经过转义，防止显示错误
   excerpt: string; // 摘要,到时候由AI生成
@@ -18,6 +19,8 @@ export interface Article {
   updatedAt: string | Date; // 更新时间
   publishedAt?: string | Date; // 发布时间，创建了，不一定立刻发布，所以发布时间和创建时间不一样
 }
+
+// 文章数据存放在数据中的类型在 @models/Article.ts中 IStoredArticle
 
 export interface CategoryWithCount {
   name: string;

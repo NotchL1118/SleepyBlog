@@ -23,12 +23,17 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/app/*": ["./src/app/*"],
+      "@/app/components/*": ["./src/app/(app)/_components/*"],
       "@/components/*": ["./src/components/*"],
       "@/providers/*": ["./src/providers/*"],
       "@/hooks/*": ["./src/hooks/*"],
       "@/utils/*": ["./src/utils/*"],
       "@/lib/*": ["./src/lib/*"],
-      "@/models/*": ["./src/models/*"]
+      "@/models/*": ["./src/models/*"],
+      "@/dashboard/*": ["./src/app/(dashboard)/*"],
+      "@/dashboard/components/*": ["./src/app/(dashboard)/_components/*"],
+      "@/actions/*": ["./src/actions/*"],
+      "@/agents/*": ["./src/agents/*"]
     },
     "noUnusedParameters": false,
     "noUnusedLocals": false
