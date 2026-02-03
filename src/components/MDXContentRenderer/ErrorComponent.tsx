@@ -1,35 +1,35 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { AlertCircle, ChevronDown, ChevronUp, Home, FileText } from 'lucide-react';
+import { AlertCircle, ChevronDown, ChevronUp, FileText, Home } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function ErrorComponent({ error }: { error: Error }) {
   const [showDetails, setShowDetails] = useState(false);
 
   // Parse error message to provide context-specific guidance
   const getErrorContext = (errorMessage: string) => {
-    if (errorMessage.includes('Expected corresponding JSX closing tag')) {
+    if (errorMessage.includes("Expected corresponding JSX closing tag")) {
       return {
-        title: 'MDX 语法错误',
-        message: '文章内容中存在未闭合的 JSX 标签，请检查所有标签是否正确闭合。',
+        title: "MDX 语法错误",
+        message: "文章内容中存在未闭合的 JSX 标签，请检查所有标签是否正确闭合。",
       };
     }
-    if (errorMessage.includes('Component') || errorMessage.includes('is not defined')) {
+    if (errorMessage.includes("Component") || errorMessage.includes("is not defined")) {
       return {
-        title: 'MDX 组件错误',
-        message: '文章中使用了未定义的组件，请确认组件名称是否正确。',
+        title: "MDX 组件错误",
+        message: "文章中使用了未定义的组件，请确认组件名称是否正确。",
       };
     }
-    if (errorMessage.includes('Unexpected token')) {
+    if (errorMessage.includes("Unexpected token")) {
       return {
-        title: 'MDX 解析错误',
-        message: '文章内容包含无法解析的语法，请检查 Markdown 和 JSX 语法是否正确。',
+        title: "MDX 解析错误",
+        message: "文章内容包含无法解析的语法，请检查 Markdown 和 JSX 语法是否正确。",
       };
     }
     return {
-      title: 'MDX 渲染错误',
-      message: '文章内容渲染时发生错误，请联系管理员或稍后重试。',
+      title: "MDX 渲染错误",
+      message: "文章内容渲染时发生错误，请联系管理员或稍后重试。",
     };
   };
 
@@ -43,9 +43,7 @@ export default function ErrorComponent({ error }: { error: Error }) {
         <div className="mb-4 flex items-start gap-3">
           <AlertCircle className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-600 dark:text-red-400" />
           <div className="flex-1">
-            <h2 className="text-xl font-semibold text-red-800 dark:text-red-300">
-              {errorContext.title}
-            </h2>
+            <h2 className="text-xl font-semibold text-red-800 dark:text-red-300">{errorContext.title}</h2>
           </div>
         </div>
 
@@ -60,12 +58,8 @@ export default function ErrorComponent({ error }: { error: Error }) {
             onClick={() => setShowDetails(!showDetails)}
             className="mb-2 flex items-center gap-2 text-sm font-medium text-red-700 transition-colors hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
           >
-            {showDetails ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-            {showDetails ? '隐藏' : '查看'}技术详情
+            {showDetails ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            {showDetails ? "隐藏" : "查看"}技术详情
           </button>
 
           {showDetails && (
@@ -100,7 +94,7 @@ export default function ErrorComponent({ error }: { error: Error }) {
             返回首页
           </Link>
           <Link
-            href="/blog"
+            href="/list"
             className="inline-flex items-center gap-2 rounded-md border border-red-600 bg-transparent px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-950/50"
           >
             <FileText className="h-4 w-4" />

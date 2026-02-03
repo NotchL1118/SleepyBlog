@@ -13,11 +13,13 @@ import type { SerializeResult } from "next-mdx-remote-client/serialize";
  * @returns 仪表盘统计数据
  */
 export async function getDashboardStats(): Promise<ServerActionResponse<IDashboardStats>> {
-  return ServerActionBuilder.execute(async () => await DashboardRepository.getDashboardStats(), {
-    successMessage: "获取仪表盘统计数据成功",
-    errorMessage: "获取仪表盘统计数据失败",
-    onError: (error) => console.error("Server Action - 获取仪表盘统计数据失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => DashboardRepository.getDashboardStats(),
+    {
+      successMessage: "获取仪表盘统计数据成功",
+      onError: (error) => console.error("Server Action - 获取仪表盘统计数据失败:", error),
+    }
+  );
 }
 
 /**
@@ -33,33 +35,39 @@ export async function getArticleListAdvanced(params?: {
   sortBy?: "createdAt" | "updatedAt" | "publishedAt" | "viewCount";
   sortOrder?: "asc" | "desc";
 }): Promise<ServerActionResponse<PaginatedData<IArticle>>> {
-  return ServerActionBuilder.execute(async () => await ArticleRepository.getListAdvanced(params), {
-    successMessage: "获取文章列表成功",
-    errorMessage: "获取文章列表失败",
-    onError: (error) => console.error("Server Action - 获取文章列表失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => ArticleRepository.getListAdvanced(params),
+    {
+      successMessage: "获取文章列表成功",
+      onError: (error) => console.error("Server Action - 获取文章列表失败:", error),
+    }
+  );
 }
 
 /**
  * 根据ID获取文章
  */
 export async function getArticleById(id: string): Promise<ServerActionResponse<IArticle | null>> {
-  return ServerActionBuilder.execute(async () => await ArticleRepository.getById(id), {
-    successMessage: "获取文章成功",
-    errorMessage: "获取文章失败",
-    onError: (error) => console.error("Server Action - 获取文章失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => ArticleRepository.getById(id),
+    {
+      successMessage: "获取文章成功",
+      onError: (error) => console.error("Server Action - 获取文章失败:", error),
+    }
+  );
 }
 
 /**
  * 创建文章
  */
 export async function createArticle(data: IArticle): Promise<ServerActionResponse<IArticle>> {
-  return ServerActionBuilder.execute(async () => await ArticleRepository.create(data), {
-    successMessage: "文章创建成功",
-    errorMessage: "文章创建失败",
-    onError: (error) => console.error("Server Action - 创建文章失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => ArticleRepository.create(data),
+    {
+      successMessage: "文章创建成功",
+      onError: (error) => console.error("Server Action - 创建文章失败:", error),
+    }
+  );
 }
 
 /**
@@ -78,22 +86,26 @@ export async function updateArticle(
     coverImageUrl?: string;
   }
 ): Promise<ServerActionResponse<IArticle | null>> {
-  return ServerActionBuilder.execute(async () => await ArticleRepository.update(id, data), {
-    successMessage: "文章更新成功",
-    errorMessage: "文章更新失败",
-    onError: (error) => console.error("Server Action - 更新文章失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => ArticleRepository.update(id, data),
+    {
+      successMessage: "文章更新成功",
+      onError: (error) => console.error("Server Action - 更新文章失败:", error),
+    }
+  );
 }
 
 /**
  * 删除文章
  */
 export async function deleteArticle(id: string): Promise<ServerActionResponse<boolean>> {
-  return ServerActionBuilder.execute(async () => await ArticleRepository.delete(id), {
-    successMessage: "文章删除成功",
-    errorMessage: "文章删除失败",
-    onError: (error) => console.error("Server Action - 删除文章失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => ArticleRepository.delete(id),
+    {
+      successMessage: "文章删除成功",
+      onError: (error) => console.error("Server Action - 删除文章失败:", error),
+    }
+  );
 }
 
 /**
@@ -104,11 +116,13 @@ export async function bulkOperateArticles(
   articleIds: string[],
   data?: { category?: string; tags?: string[] }
 ): Promise<ServerActionResponse<{ success: boolean; message: string }>> {
-  return ServerActionBuilder.execute(async () => await ArticleRepository.bulkOperation(action, articleIds, data), {
-    successMessage: "批量操作成功",
-    errorMessage: "批量操作失败",
-    onError: (error) => console.error("Server Action - 批量操作失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => ArticleRepository.bulkOperation(action, articleIds, data),
+    {
+      successMessage: "批量操作成功",
+      onError: (error) => console.error("Server Action - 批量操作失败:", error),
+    }
+  );
 }
 
 /**
@@ -119,14 +133,10 @@ export async function bulkOperateArticles(
 export async function serializeMarkdownForPreview(
   markdown: string
 ): Promise<ServerActionResponse<SerializeResult<Record<string, unknown>, Record<string, unknown>>>> {
-  return ServerActionBuilder.execute(
-    async () => {
-      const result = await serializeMDX(markdown);
-      return result;
-    },
+  return ServerActionBuilder.executeWithAdmin(
+    () => serializeMDX(markdown),
     {
       successMessage: "Markdown 序列化成功",
-      errorMessage: "序列化失败",
       onError: (error) => console.error("Server Action - Markdown 序列化失败:", error),
     }
   );
@@ -139,9 +149,11 @@ export async function serializeMarkdownForPreview(
  * @returns true 表示已存在，false 表示不存在
  */
 export async function checkSlugExists(slug: string, excludeId?: string): Promise<ServerActionResponse<boolean>> {
-  return ServerActionBuilder.execute(async () => await ArticleRepository.checkSlugExists(slug, excludeId), {
-    successMessage: "检查 slug 完成",
-    errorMessage: "检查 slug 失败",
-    onError: (error) => console.error("Server Action - 检查slug失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => ArticleRepository.checkSlugExists(slug, excludeId),
+    {
+      successMessage: "检查 slug 完成",
+      onError: (error) => console.error("Server Action - 检查slug失败:", error),
+    }
+  );
 }

@@ -1,7 +1,8 @@
 "use client";
-
+import { createElement } from "react";
 import type { ReactElement } from "react";
 import { createRoot } from "react-dom/client";
+import { ThemeProvider } from "next-themes";
 
 /**
  * Modal Manager - Dynamically insert and manage Modal components
@@ -38,7 +39,15 @@ class ModalManager {
 
     // Render using React 18+ createRoot API
     const root = createRoot(container);
-    root.render(element);
+
+    // Wrap element with ThemeProvider to provide theme context                                                                                                            
+    const wrappedElement = createElement(
+      ThemeProvider,
+      { attribute: "class", enableSystem: true, defaultTheme: "system" },
+      element
+    );
+
+    root.render(wrappedElement);
 
     // Save current Modal info
     this.currentKey = key;

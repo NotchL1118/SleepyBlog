@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth-server-utils";
 import { ServerActionResponse } from "@/types/server-actions-response";
 
 /**
@@ -56,8 +57,30 @@ export default class ServerActionBuilder {
         console.error("Server Action Error:", err);
       }
 
-      return ServerActionBuilder.error(err, options?.errorMessage);
+      // 优先使用 err.message，如果为空则使用 options?.errorMessage
+      return ServerActionBuilder.error(err.message || options?.errorMessage || "操作失败");
     }
+  }
+
+  /**
+   * 执行需要管理员权限的 Server Action
+   * 自动进行管理员权限检查
+   */
+  static async executeWithAdmin<T = unknown>(
+    fn: () => Promise<T>,
+    options?: {
+      successMessage?: string;
+      errorMessage?: string;
+      onError?: (error: Error) => void;
+    }
+  ): Promise<ServerActionResponse<T>> {
+    return ServerActionBuilder.execute(
+      async () => {
+        await requireAdmin();
+        return fn();
+      },
+      options
+    );
   }
 
   /**

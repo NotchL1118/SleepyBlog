@@ -18,10 +18,13 @@ import type { ServerActionResponse } from "@/types/server-actions-response";
 export async function getAllCategories(
   options?: CategoryQueryOptions
 ): Promise<ServerActionResponse<ICategory[]>> {
-  return ServerActionBuilder.execute(async () => await CategoryRepository.getAll(options || {}), {
-    successMessage: "获取分类列表成功",
-    onError: (error) => console.error("Server Action - 获取分类列表失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => CategoryRepository.getAll(options || {}),
+    {
+      successMessage: "获取分类列表成功",
+      onError: (error) => console.error("Server Action - 获取分类列表失败:", error),
+    }
+  );
 }
 
 /**
@@ -29,10 +32,13 @@ export async function getAllCategories(
  * @returns 激活的分类列表
  */
 export async function getCategoriesForEditor(): Promise<ServerActionResponse<ICategory[]>> {
-  return ServerActionBuilder.execute(async () => await CategoryRepository.getActive(), {
-    successMessage: "获取分类列表成功",
-    onError: (error) => console.error("Server Action - 获取分类列表失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => CategoryRepository.getActive(),
+    {
+      successMessage: "获取分类列表成功",
+      onError: (error) => console.error("Server Action - 获取分类列表失败:", error),
+    }
+  );
 }
 
 /**
@@ -41,10 +47,13 @@ export async function getCategoriesForEditor(): Promise<ServerActionResponse<ICa
  * @returns 分类对象
  */
 export async function getCategoryById(id: string): Promise<ServerActionResponse<ICategory | null>> {
-  return ServerActionBuilder.execute(async () => await CategoryRepository.getById(id), {
-    successMessage: "获取分类成功",
-    onError: (error) => console.error("Server Action - 获取分类失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => CategoryRepository.getById(id),
+    {
+      successMessage: "获取分类成功",
+      onError: (error) => console.error("Server Action - 获取分类失败:", error),
+    }
+  );
 }
 
 /**
@@ -65,7 +74,7 @@ export async function getCategoryBySlug(slug: string): Promise<ServerActionRespo
  * @returns 创建的分类
  */
 export async function createCategory(data: CategoryCreateData): Promise<ServerActionResponse<ICategory>> {
-  return ServerActionBuilder.execute(
+  return ServerActionBuilder.executeWithAdmin(
     async () => {
       // 检查分类名称是否已存在
       const nameExists = await CategoryRepository.existsByName(data.name);
@@ -98,7 +107,7 @@ export async function updateCategory(
   id: string,
   data: CategoryUpdateData
 ): Promise<ServerActionResponse<ICategory | null>> {
-  return ServerActionBuilder.execute(
+  return ServerActionBuilder.executeWithAdmin(
     async () => {
       // 如果更新了名称，检查是否与其他分类重复
       if (data.name) {
@@ -131,10 +140,13 @@ export async function updateCategory(
  * @returns 是否删除成功
  */
 export async function deleteCategory(id: string): Promise<ServerActionResponse<boolean>> {
-  return ServerActionBuilder.execute(async () => await CategoryRepository.delete(id), {
-    successMessage: "删除分类成功",
-    onError: (error) => console.error("Server Action - 删除分类失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => CategoryRepository.delete(id),
+    {
+      successMessage: "删除分类成功",
+      onError: (error) => console.error("Server Action - 删除分类失败:", error),
+    }
+  );
 }
 
 /**
@@ -143,10 +155,13 @@ export async function deleteCategory(id: string): Promise<ServerActionResponse<b
  * @returns 删除的数量
  */
 export async function bulkDeleteCategories(ids: string[]): Promise<ServerActionResponse<number>> {
-  return ServerActionBuilder.execute(async () => await CategoryRepository.bulkDelete(ids), {
-    successMessage: `成功删除 ${ids.length} 个分类`,
-    onError: (error) => console.error("Server Action - 批量删除分类失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => CategoryRepository.bulkDelete(ids),
+    {
+      successMessage: `成功删除 ${ids.length} 个分类`,
+      onError: (error) => console.error("Server Action - 批量删除分类失败:", error),
+    }
+  );
 }
 
 /**
@@ -157,10 +172,13 @@ export async function bulkDeleteCategories(ids: string[]): Promise<ServerActionR
 export async function reorderCategories(
   reorderData: Array<{ id: string; displayOrder: number }>
 ): Promise<ServerActionResponse<boolean>> {
-  return ServerActionBuilder.execute(async () => await CategoryRepository.reorder(reorderData), {
-    successMessage: "更新分类顺序成功",
-    onError: (error) => console.error("Server Action - 更新分类顺序失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => CategoryRepository.reorder(reorderData),
+    {
+      successMessage: "更新分类顺序成功",
+      onError: (error) => console.error("Server Action - 更新分类顺序失败:", error),
+    }
+  );
 }
 
 /**
@@ -168,8 +186,11 @@ export async function reorderCategories(
  * @returns 是否同步成功
  */
 export async function syncArticleCount(): Promise<ServerActionResponse<boolean>> {
-  return ServerActionBuilder.execute(async () => await CategoryRepository.syncArticleCount(), {
-    successMessage: "同步文章数量成功",
-    onError: (error) => console.error("Server Action - 同步文章数量失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => CategoryRepository.syncArticleCount(),
+    {
+      successMessage: "同步文章数量成功",
+      onError: (error) => console.error("Server Action - 同步文章数量失败:", error),
+    }
+  );
 }

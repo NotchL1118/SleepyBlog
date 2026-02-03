@@ -13,8 +13,6 @@ import type { CategoryCreateData, CategoryFormData, ICategory } from "@/types/ca
 import { message } from "@/utils/message-info";
 import { AlertCircle, Edit, Plus, RefreshCw, Search, Trash2, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { RequireAuth } from "../../_components/auth/AuthProvider";
-import DashboardLayout from "../../_components/layout/DashboardLayout";
 
 interface FormErrors {
   [key: string]: string | undefined;
@@ -251,16 +249,12 @@ export default function CategoriesPage() {
 
   if (isLoading) {
     return (
-      <RequireAuth>
-        <DashboardLayout>
-          <div className="flex h-64 items-center justify-center">
-            <div className="flex items-center space-x-3">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600 dark:border-gray-600 dark:border-t-indigo-400"></div>
-              <span className="text-gray-600 dark:text-gray-400">加载中...</span>
-            </div>
-          </div>
-        </DashboardLayout>
-      </RequireAuth>
+      <div className="flex h-64 items-center justify-center">
+        <div className="flex items-center space-x-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600 dark:border-gray-600 dark:border-t-indigo-400"></div>
+          <span className="text-gray-600 dark:text-gray-400">加载中...</span>
+        </div>
+      </div>
     );
   }
 

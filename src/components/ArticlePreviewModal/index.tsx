@@ -1,7 +1,7 @@
 "use client";
 
 import ArticleView, { type ArticleViewProps } from "@/components/ArticleView";
-import CustomMDXRemoteClient from "@/components/MDXContentRenderer/CSR";
+import CustomMDXRemoteClient from "@/components/MDXContentRenderer/index.csr";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import type { SerializeResult } from "next-mdx-remote-client/serialize";

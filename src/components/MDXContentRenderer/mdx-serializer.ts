@@ -5,7 +5,11 @@
  * 在服务器端将 markdown 编译为可在客户端使用的格式
  */
 import remarkDirectiveToComponent from "@/utils/plugins/remark-directive-to-component";
+import { remarkPreserveListStart } from "@/utils/plugins/remark-preserve-list-start";
+import remarkArrowReplacement from "@/utils/plugins/remark-arrow-replacement";
 import { serialize, type SerializeResult } from "next-mdx-remote-client/serialize";
+import rehypeSlug from "rehype-slug";
+import rehypeUnwrapImages from "rehype-unwrap-images";
 import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
 /**
@@ -21,7 +25,8 @@ export async function serializeMDX(
     source,
     options: {
       mdxOptions: {
-        remarkPlugins: [remarkGfm, remarkDirective, remarkDirectiveToComponent],
+        remarkPlugins: [remarkGfm, remarkPreserveListStart, remarkDirective, remarkDirectiveToComponent, remarkArrowReplacement],
+        rehypePlugins: [rehypeUnwrapImages, rehypeSlug],
       },
       parseFrontmatter: false, // 文章的 frontmatter 已经在数据库中处理
       disableImports: true, // 客户端不支持 import statements

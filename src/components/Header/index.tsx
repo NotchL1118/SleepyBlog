@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import GlowEffect from "./GlowEffect";
 import Styles from "./index.module.scss";
+import UserMenu from "./UserMenu";
 
 export default function Header() {
   const pathname = usePathname();
@@ -43,9 +44,7 @@ export default function Header() {
         </div>
         <div className="flex items-center gap-2">
           <ThemeSwitcher />
-          {/* <button className="rounded-md px-3 py-1 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800">
-            登录
-          </button> */}
+          <UserMenu />
         </div>
       </GlowEffect>
     </header>
@@ -55,20 +54,20 @@ export default function Header() {
 const HeaderConfig = [
   {
     title: "开发文章",
-    href: "/blog",
+    href: "/list",
   },
-  {
-    title: "生活随想",
-    href: "/life",
-  },
+  // {
+  //   title: "生活随想",
+  //   href: "/life",
+  // },
   {
     title: "碎碎念",
     href: "/thoughts",
   },
-  {
-    title: "随手一拍",
-    href: "/camera",
-  },
+  // {
+  //   title: "随手一拍",
+  //   href: "/camera",
+  // },
   {
     title: "关于我",
     href: "/about",

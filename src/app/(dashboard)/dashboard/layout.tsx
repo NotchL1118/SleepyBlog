@@ -1,6 +1,3 @@
-"use client";
-
-import { RequireAuth } from "../_components/auth/AuthProvider";
 import DashboardLayout from "../_components/layout/DashboardLayout";
 
 export default function DashboardRootLayout({
@@ -8,9 +5,5 @@ export default function DashboardRootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <RequireAuth>
-      <DashboardLayout>{children}</DashboardLayout>
-    </RequireAuth>
-  );
+  return <DashboardLayout>{children}</DashboardLayout>;
 }

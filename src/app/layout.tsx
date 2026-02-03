@@ -3,6 +3,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+// 实现主题切换的动画
+import "@/styles/view-transitions.css";
 
 const puHuiTi = localFont({
   src: "../../public/fonts/AlibabaPuHuiTi-3-55-Regular.woff2",

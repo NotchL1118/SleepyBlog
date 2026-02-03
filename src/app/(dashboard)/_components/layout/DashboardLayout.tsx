@@ -1,5 +1,6 @@
 "use client";
 
+import { signOut, useSession } from "@/lib/auth-client";
 import {
   ArrowLeft,
   BarChart3,
@@ -13,13 +14,14 @@ import {
   Sun,
   Tags,
   User,
+  UserIcon,
   X,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAuth } from "../auth/AuthProvider";
 
 interface DashboardMenuItem {
   key: string;
@@ -113,7 +115,7 @@ interface MobileMenuProps {
 }
 
 function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
-  const { logout, session } = useAuth();
+  const { data: session } = useSession();
   const pathname = usePathname();
 
   return (
@@ -175,14 +177,14 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-xs font-medium text-gray-900 dark:text-gray-100">
-                  {session.username || "管理员"}
+                  {session?.user?.name || "管理员"}
                 </p>
               </div>
             </div>
 
             <button
               onClick={() => {
-                logout();
+                signOut();
                 onClose();
               }}
               className="flex w-full items-center rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-red-50 hover:text-red-700 dark:text-gray-300 dark:hover:bg-red-900/20 dark:hover:text-red-400"
@@ -214,7 +216,9 @@ export default function DashboardLayout({
 }: DashboardLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { logout, session } = useAuth();
+  const { data: session } = useSession();
+  const userName = session?.user?.name || "管理员";
+  const userImage = session?.user?.image || "";
 
   return (
     <div className="min-h-screen bg-gray-50 transition-colors dark:bg-gray-900">
@@ -271,15 +275,25 @@ export default function DashboardLayout({
             {/* Desktop User Menu */}
             <div className="hidden items-center space-x-2 rounded-lg bg-gray-100 px-3 py-1.5 lg:flex dark:bg-gray-800">
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600">
-                <User className="h-3.5 w-3.5 text-white" />
+                {userImage ? (
+                  <Image
+                    src={userImage}
+                    alt={session?.user?.name || ""}
+                    width={24}
+                    height={24}
+                    className="rounded-full object-cover"
+                  />
+                ) : (
+                  <UserIcon className="h-3.5 w-3.5 text-white" />
+                )}
               </div>
-              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                {session.username || "管理员"}
-              </span>
+              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{userName}</span>
             </div>
 
             <button
-              onClick={logout}
+              onClick={() => {
+                signOut();
+              }}
               className="hidden items-center space-x-1 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-600 transition-colors hover:bg-red-50 hover:text-red-700 lg:flex dark:text-gray-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
               title="退出登录"
             >

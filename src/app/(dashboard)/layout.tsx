@@ -1,6 +1,5 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { ThemeProvider } from "next-themes";
-import ConditionalAuthProvider from "./_components/auth/ConditionalAuthProvider";
 
 interface Props {
   params: Promise<unknown>;
@@ -21,9 +20,7 @@ export default function DashboardRootLayout({
 }>) {
   return (
     <ThemeProvider attribute="class" enableSystem defaultTheme="system">
-      <ConditionalAuthProvider>
-        <div className="min-h-screen bg-gray-50 transition-colors dark:bg-gray-900">{children}</div>
-      </ConditionalAuthProvider>
+      <div className="min-h-screen bg-gray-50 transition-colors dark:bg-gray-900">{children}</div>
     </ThemeProvider>
   );
 }

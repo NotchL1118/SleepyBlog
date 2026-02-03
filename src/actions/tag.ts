@@ -11,10 +11,13 @@ import type { ServerActionResponse } from "@/types/server-actions-response";
  * @returns 标签列表
  */
 export async function getAllTags(options?: TagQueryOptions): Promise<ServerActionResponse<ITag[]>> {
-  return ServerActionBuilder.execute(async () => await TagRepository.getAll(options || {}), {
-    successMessage: "获取标签列表成功",
-    onError: (error) => console.error("Server Action - 获取标签列表失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => TagRepository.getAll(options || {}),
+    {
+      successMessage: "获取标签列表成功",
+      onError: (error) => console.error("Server Action - 获取标签列表失败:", error),
+    }
+  );
 }
 
 /**
@@ -22,10 +25,13 @@ export async function getAllTags(options?: TagQueryOptions): Promise<ServerActio
  * @returns 激活的标签列表
  */
 export async function getTagsForEditor(): Promise<ServerActionResponse<ITag[]>> {
-  return ServerActionBuilder.execute(async () => await TagRepository.getActive(), {
-    successMessage: "获取标签列表成功",
-    onError: (error) => console.error("Server Action - 获取标签列表失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => TagRepository.getActive(),
+    {
+      successMessage: "获取标签列表成功",
+      onError: (error) => console.error("Server Action - 获取标签列表失败:", error),
+    }
+  );
 }
 
 /**
@@ -34,10 +40,13 @@ export async function getTagsForEditor(): Promise<ServerActionResponse<ITag[]>> 
  * @returns 标签对象
  */
 export async function getTagById(id: string): Promise<ServerActionResponse<ITag | null>> {
-  return ServerActionBuilder.execute(async () => await TagRepository.getById(id), {
-    successMessage: "获取标签成功",
-    onError: (error) => console.error("Server Action - 获取标签失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => TagRepository.getById(id),
+    {
+      successMessage: "获取标签成功",
+      onError: (error) => console.error("Server Action - 获取标签失败:", error),
+    }
+  );
 }
 
 /**
@@ -58,7 +67,7 @@ export async function getTagBySlug(slug: string): Promise<ServerActionResponse<I
  * @returns 创建的标签
  */
 export async function createTag(data: TagCreateData): Promise<ServerActionResponse<ITag>> {
-  return ServerActionBuilder.execute(
+  return ServerActionBuilder.executeWithAdmin(
     async () => {
       // 检查标签名称是否已存在
       const nameExists = await TagRepository.existsByName(data.name);
@@ -87,7 +96,7 @@ export async function createTag(data: TagCreateData): Promise<ServerActionRespon
  * @returns 创建的标签
  */
 export async function quickCreateTag(name: string): Promise<ServerActionResponse<ITag>> {
-  return ServerActionBuilder.execute(
+  return ServerActionBuilder.executeWithAdmin(
     async () => {
       const trimmedName = name.trim();
       if (!trimmedName) {
@@ -126,7 +135,7 @@ export async function quickCreateTag(name: string): Promise<ServerActionResponse
  * @returns 更新后的标签
  */
 export async function updateTag(id: string, data: TagUpdateData): Promise<ServerActionResponse<ITag | null>> {
-  return ServerActionBuilder.execute(
+  return ServerActionBuilder.executeWithAdmin(
     async () => {
       // 如果更新了名称，检查是否与其他标签重复
       if (data.name) {
@@ -159,10 +168,13 @@ export async function updateTag(id: string, data: TagUpdateData): Promise<Server
  * @returns 是否删除成功
  */
 export async function deleteTag(id: string): Promise<ServerActionResponse<boolean>> {
-  return ServerActionBuilder.execute(async () => await TagRepository.delete(id), {
-    successMessage: "删除标签成功",
-    onError: (error) => console.error("Server Action - 删除标签失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => TagRepository.delete(id),
+    {
+      successMessage: "删除标签成功",
+      onError: (error) => console.error("Server Action - 删除标签失败:", error),
+    }
+  );
 }
 
 /**
@@ -171,10 +183,13 @@ export async function deleteTag(id: string): Promise<ServerActionResponse<boolea
  * @returns 删除的数量
  */
 export async function bulkDeleteTags(ids: string[]): Promise<ServerActionResponse<number>> {
-  return ServerActionBuilder.execute(async () => await TagRepository.bulkDelete(ids), {
-    successMessage: `成功删除 ${ids.length} 个标签`,
-    onError: (error) => console.error("Server Action - 批量删除标签失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => TagRepository.bulkDelete(ids),
+    {
+      successMessage: `成功删除 ${ids.length} 个标签`,
+      onError: (error) => console.error("Server Action - 批量删除标签失败:", error),
+    }
+  );
 }
 
 /**
@@ -182,8 +197,11 @@ export async function bulkDeleteTags(ids: string[]): Promise<ServerActionRespons
  * @returns 是否同步成功
  */
 export async function syncTagArticleCount(): Promise<ServerActionResponse<boolean>> {
-  return ServerActionBuilder.execute(async () => await TagRepository.syncArticleCount(), {
-    successMessage: "同步文章数量成功",
-    onError: (error) => console.error("Server Action - 同步文章数量失败:", error),
-  });
+  return ServerActionBuilder.executeWithAdmin(
+    () => TagRepository.syncArticleCount(),
+    {
+      successMessage: "同步文章数量成功",
+      onError: (error) => console.error("Server Action - 同步文章数量失败:", error),
+    }
+  );
 }

@@ -15,7 +15,7 @@ export default function NotFound() {
             返回首页
           </Link>
           <Link
-            href="/blog"
+            href="/list"
             className="inline-block rounded-lg border border-gray-300 px-6 py-3 text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
           >
             查看所有文章

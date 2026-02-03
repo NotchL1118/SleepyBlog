@@ -2,6 +2,153 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===============================================
+   CSS VARIABLES - Design Tokens
+   Central color system for the entire application
+   =============================================== */
+
+:root {
+  /* === Layout === */
+  --header-height: 3.5rem; /* 56px = 14 * 0.25rem */
+
+  /* === Light Theme (Default) === */
+
+  /* Background */
+  --color-background: 248 250 252; /* #f8fafc - slate-50 */
+  --color-background-surface: 255 255 255; /* #ffffff - white */
+  --color-background-elevated: 241 245 249; /* #f1f5f9 - slate-100 */
+  --color-background-muted: 241 245 249; /* #f1f5f9 - slate-100 */
+  --color-background-subtle: 226 232 240; /* #e2e8f0 - slate-200 */
+
+  /* Foreground / Text */
+  --color-foreground: 17 24 39; /* #111827 - gray-900 */
+  --color-foreground-muted: 71 85 105; /* #475569 - slate-600 */
+  --color-foreground-subtle: 100 116 139; /* #64748b - slate-500 */
+  --color-foreground-placeholder: 148 163 184; /* #94a3b8 - slate-400 */
+  --color-foreground-inverse: 255 255 255; /* #ffffff - white */
+
+  /* Primary (Brand Blue) */
+  --color-primary: 59 130 246; /* #3b82f6 - blue-500 */
+  --color-primary-hover: 37 99 235; /* #2563eb - blue-600 */
+  --color-primary-active: 29 78 216; /* #1d4ed8 - blue-700 */
+  --color-primary-subtle: 239 246 255; /* #eff6ff - blue-50 */
+  --color-primary-foreground: 255 255 255; /* #ffffff - white */
+
+  /* Accent */
+  --color-accent: 96 165 250; /* #60a5fa - blue-400 */
+  --color-accent-hover: 59 130 246; /* #3b82f6 - blue-500 */
+  --color-accent-subtle: 219 234 254; /* #dbeafe - blue-100 */
+
+  /* Border */
+  --color-border: 226 232 240; /* #e2e8f0 - slate-200 */
+  --color-border-muted: 241 245 249; /* #f1f5f9 - slate-100 */
+  --color-border-strong: 203 213 225; /* #cbd5e1 - slate-300 */
+
+  /* Status Colors */
+  --color-success: 34 197 94; /* #22c55e - green-500 */
+  --color-success-subtle: 34 197 94 / 0.1;
+  --color-success-foreground: 22 101 52; /* #166534 - green-800 */
+
+  --color-warning: 234 179 8; /* #eab308 - yellow-500 */
+  --color-warning-subtle: 234 179 8 / 0.1;
+  --color-warning-foreground: 133 77 14; /* #854d0e - yellow-800 */
+
+  --color-error: 239 68 68; /* #ef4444 - red-500 */
+  --color-error-subtle: 239 68 68 / 0.1;
+  --color-error-foreground: 153 27 27; /* #991b1b - red-800 */
+
+  --color-info: 59 130 246; /* #3b82f6 - blue-500 */
+  --color-info-subtle: 59 130 246 / 0.1;
+  --color-info-foreground: 30 64 175; /* #1e40af - blue-800 */
+
+  /* Gradient */
+  --color-gradient-start: 59 130 246; /* #3b82f6 - blue-500 */
+  --color-gradient-middle: 168 85 247; /* #a855f7 - purple-500 */
+  --color-gradient-end: 236 72 153; /* #ec4899 - pink-500 */
+
+  /* Code Block */
+  --color-code-background: 250 250 250; /* #fafafa */
+  --color-code-text: 30 41 59; /* #1e293b - slate-800 */
+  --color-code-border: 226 232 240; /* #e2e8f0 - slate-200 */
+
+  /* Ring (focus outline) */
+  --color-ring: 59 130 246; /* #3b82f6 - blue-500 */
+
+  /* Base settings */
+  color-scheme: light;
+  font-size: 16px;
+}
+
+/* === Dark Theme === */
+.dark {
+  /* Background */
+  --color-background: 17 24 39; /* #111827 - gray-900 */
+  --color-background-surface: 30 41 59; /* #1e293b - slate-800 */
+  --color-background-elevated: 51 65 85; /* #334155 - slate-700 */
+  --color-background-muted: 30 41 59; /* #1e293b - slate-800 */
+  --color-background-subtle: 51 65 85; /* #334155 - slate-700 */
+
+  /* Foreground / Text */
+  --color-foreground: 248 250 252; /* #f8fafc - slate-50 */
+  --color-foreground-muted: 148 163 184; /* #94a3b8 - slate-400 */
+  --color-foreground-subtle: 100 116 139; /* #64748b - slate-500 */
+  --color-foreground-placeholder: 71 85 105; /* #475569 - slate-600 */
+  --color-foreground-inverse: 17 24 39; /* #111827 - gray-900 */
+
+  /* Primary (Brand Blue) */
+  --color-primary: 59 130 246; /* #3b82f6 - blue-500 */
+  --color-primary-hover: 96 165 250; /* #60a5fa - blue-400 */
+  --color-primary-active: 147 197 253; /* #93c5fd - blue-300 */
+  --color-primary-subtle: 59 130 246 / 0.2; /* 20% opacity */
+  --color-primary-foreground: 255 255 255; /* #ffffff - white */
+
+  /* Accent */
+  --color-accent: 96 165 250; /* #60a5fa - blue-400 */
+  --color-accent-hover: 147 197 253; /* #93c5fd - blue-300 */
+  --color-accent-subtle: 96 165 250 / 0.15;
+
+  /* Border */
+  --color-border: 51 65 85; /* #334155 - slate-700 */
+  --color-border-muted: 30 41 59; /* #1e293b - slate-800 */
+  --color-border-strong: 71 85 105; /* #475569 - slate-600 */
+
+  /* Status Colors */
+  --color-success: 74 222 128; /* #4ade80 - green-400 */
+  --color-success-subtle: 34 197 94 / 0.2;
+  --color-success-foreground: 187 247 208; /* #bbf7d0 - green-200 */
+
+  --color-warning: 250 204 21; /* #facc15 - yellow-400 */
+  --color-warning-subtle: 234 179 8 / 0.2;
+  --color-warning-foreground: 254 240 138; /* #fef08a - yellow-200 */
+
+  --color-error: 248 113 113; /* #f87171 - red-400 */
+  --color-error-subtle: 239 68 68 / 0.2;
+  --color-error-foreground: 254 202 202; /* #fecaca - red-200 */
+
+  --color-info: 96 165 250; /* #60a5fa - blue-400 */
+  --color-info-subtle: 59 130 246 / 0.2;
+  --color-info-foreground: 191 219 254; /* #bfdbfe - blue-200 */
+
+  /* Gradient */
+  --color-gradient-start: 96 165 250; /* #60a5fa - blue-400 */
+  --color-gradient-middle: 192 132 252; /* #c084fc - purple-400 */
+  --color-gradient-end: 244 114 182; /* #f472b6 - pink-400 */
+
+  /* Code Block */
+  --color-code-background: 30 30 30; /* #1e1e1e - VSCode dark */
+  --color-code-text: 226 232 240; /* #e2e8f0 - slate-200 */
+  --color-code-border: 51 65 85; /* #334155 - slate-700 */
+
+  /* Ring (focus outline) */
+  --color-ring: 96 165 250; /* #60a5fa - blue-400 */
+
+  color-scheme: dark;
+}
+
+/* ===============================================
+   BASE STYLES
+   =============================================== */
+
 html {
   color-scheme: light;
 }
@@ -10,22 +157,29 @@ html.dark {
   color-scheme: dark;
 }
 
-:root {
-  --background: rgb(248, 250, 252);
-  /* --foreground: #171717; */
-  --header-height: 3.5rem; /* 56px = 14 * 0.25rem */
-  font-size: 16px;
+body {
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
 }
+
+/* ===============================================
+   LAYER: COMPONENTS
+   =============================================== */
 
 @layer components {
   .headerHeight {
     height: var(--header-height);
   }
+
   /* 顶开头部 - 使用padding-top而不是margin-top，避免margin塌陷问题 */
   .avoidHeader {
     padding-top: 80px;
   }
 }
+
+/* ===============================================
+   LAYER: UTILITIES
+   =============================================== */
 
 @layer utilities {
   .text-balance {
@@ -43,11 +197,9 @@ html.dark {
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-  /* font-family: "LXGW WenKai GB", sans-serif; */
-}
+/* ===============================================
+   SCROLLBAR HIDING (Global)
+   =============================================== */
 
 /* 全局隐藏滑动条 */
 html::-webkit-scrollbar {
@@ -60,65 +212,13 @@ html {
   scrollbar-width: none; /* Firefox */
 }
 
-/* 圆形动画主题切换 */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
+/* ===============================================
+   MDX LIST FIX
+   放在 @layer 外部以获得更高优先级
+   =============================================== */
+
+/* 修复 MDX 列表项中 p 标签导致的换行问题 */
+.mdx-list li > p:first-of-type {
+  display: inline;
 }
 
-/* 默认状态 - 切换到亮色主题时的收缩动画 */
-::view-transition-new(root) {
-  background: rgb(248, 250, 252); /* 亮色主题背景色 */
-  z-index: 1;
-}
-
-::view-transition-old(root) {
-  clip-path: circle(var(--r, 100vmax) at var(--x, 50%) var(--y, 50%));
-  animation: theme-shrink-light 0.7s ease-out forwards;
-  z-index: 2;
-}
-
-/* 切换到暗色主题时 - 重置默认动画并应用扩散动画 */
-.dark::view-transition-old(root) {
-  animation: none; /* 取消默认的收缩动画 */
-  z-index: -1;
-}
-
-.dark::view-transition-new(root) {
-  clip-path: circle(0 at var(--x, 50%) var(--y, 50%));
-  animation: theme-expand-dark 0.7s ease-out forwards;
-  background: rgb(17, 24, 39); /* 暗色主题背景色 */
-  z-index: 1;
-}
-
-/* 亮色主题收缩动画 - 从外部收缩到圆心 */
-@keyframes theme-shrink-light {
-  0% {
-    clip-path: circle(var(--r, 100vmax) at var(--x, 50%) var(--y, 50%));
-  }
-  100% {
-    clip-path: circle(0 at var(--x, 50%) var(--y, 50%));
-  }
-}
-
-/* 暗色主题扩散动画 - 从圆心扩散到外部 */
-@keyframes theme-expand-dark {
-  0% {
-    clip-path: circle(0 at var(--x, 50%) var(--y, 50%));
-  }
-  100% {
-    clip-path: circle(var(--r, 100vmax) at var(--x, 50%) var(--y, 50%));
-  }
-}
-
-/* 暗色主题样式 */
-.dark {
-  --background: rgb(17, 24, 39);
-  --foreground: rgb(243, 244, 246);
-}
-
-.dark body {
-  background: var(--background);
-  color: var(--foreground);
-}

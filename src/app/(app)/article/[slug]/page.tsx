@@ -19,7 +19,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <div className="avoidHeader min-h-screen bg-white dark:bg-gray-900">
-      <div className="mx-auto max-w-4xl px-4 py-8">
+      <div className="mx-auto max-w-6xl px-4 py-8">
         <ArticleView article={article} mode="normal">
           {/* 在 Server Component 中渲染 MDX 内容 */}
           <CustomMDXRemote source={article.content} />

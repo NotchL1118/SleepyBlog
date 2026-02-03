@@ -11,9 +11,13 @@
 
 import { mdxComponents } from "@/mdx-components";
 import remarkDirectiveToComponent from "@/utils/plugins/remark-directive-to-component";
+import { remarkPreserveListStart } from "@/utils/plugins/remark-preserve-list-start";
+import remarkArrowReplacement from "@/utils/plugins/remark-arrow-replacement";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
+import rehypeUnwrapImages from "rehype-unwrap-images";
 import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
+import rehypeSlug from "rehype-slug";
 import ErrorComponent from "./ErrorComponent";
 
 export default function CustomMDXRemote({ source }: { source: string }) {
@@ -22,7 +26,8 @@ export default function CustomMDXRemote({ source }: { source: string }) {
       source={source}
       options={{
         mdxOptions: {
-          remarkPlugins: [remarkGfm, remarkDirective, remarkDirectiveToComponent],
+          remarkPlugins: [remarkGfm, remarkPreserveListStart, remarkDirective, remarkDirectiveToComponent, remarkArrowReplacement],
+          rehypePlugins: [rehypeUnwrapImages, rehypeSlug],
         },
       }}
       components={mdxComponents}
