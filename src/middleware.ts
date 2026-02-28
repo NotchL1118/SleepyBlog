@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth-server";
 
+/* 中间件，保护 dashboard 路由，仅管理员可访问 */
 export async function middleware(request: NextRequest) {
   // 保护 dashboard 路由
   const session = await auth.api.getSession({

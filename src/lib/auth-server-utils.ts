@@ -72,7 +72,7 @@ export async function requireAdmin() {
   }
 
   if (!isSessionAdmin(session)) {
-    throw new AuthError("您没有管理员权限执行此操作", "FORBIDDEN");
+    throw new AuthError("是管理员吗你就来", "FORBIDDEN");
   }
 
   return session;

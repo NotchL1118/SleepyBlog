@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// TODO: 实现鉴权逻辑
+import { ServerConfig } from "@/config";
+import { AuthError, requireAdmin } from "@/lib/auth-server-utils";
 
 interface GenerateCoverRequest {
   prompt: string;
@@ -12,10 +12,19 @@ const SYSTEM_PROMPT = `
 `;
 
 export async function POST(request: NextRequest) {
+  // 0. 鉴权：仅管理员可用
+  try {
+    await requireAdmin();
+  } catch (error) {
+    if (error instanceof AuthError) {
+      const status = error.code === "UNAUTHORIZED" ? 401 : 403;
+      return NextResponse.json({ error: { code: error.code, message: error.message } }, { status });
+    }
+    return NextResponse.json({ error: { code: "UNAUTHORIZED", message: "认证失败" } }, { status: 401 });
+  }
+
   // 1. 验证环境变量
-  const ARK_API_URL = process.env.ARK_API_URL;
-  const ARK_API_KEY = process.env.ARK_API_KEY;
-  const ARK_MODEL = process.env.ARK_MODEL_POINTER;
+  const { arkApiUrl: ARK_API_URL, arkApiKey: ARK_API_KEY, arkModelPointer: ARK_MODEL } = ServerConfig.ark;
 
   if (!ARK_API_KEY || !ARK_MODEL || !ARK_API_URL) {
     return NextResponse.json({ error: { code: "ConfigError", message: "Missing API configuration" } }, { status: 500 });

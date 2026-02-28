@@ -1,10 +1,9 @@
 import * as qiniu from 'qiniu';
 import { NextRequest, NextResponse } from 'next/server';
+import { ServerConfig } from '@/config';
+import { AuthError, requireAdmin } from '@/lib/auth-server-utils';
 
-const accessKey = process.env.QINIU_AK!;
-const secretKey = process.env.QINIU_SK!;
-const bucket = process.env.QINIU_BUCKET!;
-const domain = process.env.QINIU_DOMAIN!;
+const { accessKey, secretKey, bucket, domain } = ServerConfig.qiniu;
 
 // 从 data URI 中提取 MIME 类型和 base64 数据
 function parseDataUri(dataUri: string) {
@@ -35,6 +34,17 @@ function generateKey(ext: string, filename?: string): string {
 }
 
 export async function POST(request: NextRequest) {
+  // 鉴权：仅管理员可用
+  try {
+    await requireAdmin();
+  } catch (error) {
+    if (error instanceof AuthError) {
+      const status = error.code === "UNAUTHORIZED" ? 401 : 403;
+      return NextResponse.json({ success: false, error: error.message }, { status });
+    }
+    return NextResponse.json({ success: false, error: "认证失败" }, { status: 401 });
+  }
+
   // 检查环境变量
   if (!accessKey || !secretKey || !bucket || !domain) {
     return NextResponse.json(

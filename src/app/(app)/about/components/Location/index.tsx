@@ -1,5 +1,6 @@
 "use client";
 
+import { ServerConfig } from "@/config";
 import { motion } from "framer-motion";
 import { Clock, Globe, MapPin, Navigation, Thermometer } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -110,12 +111,12 @@ const Location = () => {
       try {
         // 设置高德地图安全密钥
         window._AMapSecurityConfig = {
-          securityJsCode: process.env.NEXT_PUBLIC_AMAP_SECURITY_CODE || "",
+          securityJsCode: ServerConfig.amap.securityCode || "",
         };
 
         // 动态加载高德地图API
         const script = document.createElement("script");
-        const apiKey = process.env.NEXT_PUBLIC_AMAP_API_KEY || "";
+        const apiKey = ServerConfig.amap.apiKey || "";
 
         if (!apiKey) {
           console.warn("AMap API key not found, using fallback display");

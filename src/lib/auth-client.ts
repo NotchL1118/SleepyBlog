@@ -9,7 +9,6 @@ import { customSessionClient, lastLoginMethodClient } from "better-auth/client/p
 import type { auth } from "@/lib/auth-server";
 
 export const authClient = createAuthClient({
-  baseURL: typeof window !== "undefined" ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL || "",
   plugins: [customSessionClient<typeof auth>(), lastLoginMethodClient()]
 });
 

@@ -1,3 +1,4 @@
+import { ServerConfig } from "@/config";
 import { requireAdmin } from "@/lib/auth-server-utils";
 import { ServerActionResponse } from "@/types/server-actions-response";
 
@@ -53,7 +54,7 @@ export default class ServerActionBuilder {
       }
 
       // 在开发环境打印错误
-      if (process.env.NODE_ENV === "development") {
+      if (ServerConfig.isDevelopment) {
         console.error("Server Action Error:", err);
       }
 

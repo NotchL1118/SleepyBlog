@@ -164,17 +164,17 @@ export default function ArticleEditorPage() {
   const handleAIGenerate = async (options: GenerateOptions) => {
     try {
       setIsAIGenerating(true);
-      const result = await generateArticleInfoByAgent(values.content, undefined, articleId);
+      const result = await generateArticleInfoByAgent(values.content, articleId);
       if (result.success) {
         message.success("文章信息生成成功");
         console.log("result", result);
         const updates: Partial<ArticleFormData> = {};
         if (options.title) updates.title = result.title;
         if (options.slug) updates.slug = result.slug;
-        if (options.excerpt) updates.excerpt = result.expert;
+        if (options.excerpt) updates.excerpt = result.excerpt;
         setValues(updates);
       } else {
-        message.error("文章信息生成失败");
+        message.error(result.error ? `生成失败: ${result.error}` : "文章信息生成失败");
       }
     } catch (error) {
       message.error("文章信息生成失败: " + (error as Error).message);

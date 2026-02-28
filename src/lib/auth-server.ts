@@ -2,13 +2,14 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { customSession, lastLoginMethod } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
+import { ServerConfig } from "@/config";
 
 /* Auth Server Configuration
 - Database: MongoDB
 - Auth服务器配置,给api提供认证服务
 */
 
-const MONGODB_URL = process.env.MONGODB_ROOT_URL as string;
+const MONGODB_URL = ServerConfig.mongodb.rootUrl;
 
 if (!MONGODB_URL) {
   throw new Error("请在环境变量中设置 MONGODB_ROOT_URL");
@@ -17,14 +18,11 @@ if (!MONGODB_URL) {
 const client = new MongoClient(MONGODB_URL);
 const db = client.db();
 
-// Parse trusted origins from environment variable (comma-separated)
-const trustedOrigins = (process.env.TRUSTED_ORIGINS || "")
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+// Parse trusted origins from config
+const trustedOrigins = ServerConfig.betterAuth.trustedOrigins;
 
-// Parse admin emails from environment variable (comma-separated)
-const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(",")?.map((e) => e.trim())?.filter(Boolean) || [];
+// Parse admin emails from config
+const ADMIN_EMAILS = ServerConfig.betterAuth.adminEmails;
 
 
 export const auth = betterAuth({
@@ -32,12 +30,12 @@ export const auth = betterAuth({
   trustedOrigins,
   socialProviders: {
     github: {
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+      clientId: ServerConfig.betterAuth.githubClientId!,
+      clientSecret: ServerConfig.betterAuth.githubClientSecret!,
     },
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: ServerConfig.betterAuth.googleClientId!,
+      clientSecret: ServerConfig.betterAuth.googleClientSecret!,
     },
   },
   session: {

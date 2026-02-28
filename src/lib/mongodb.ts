@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { ServerConfig } from "@/config";
 
-const MONGODB_URL = process.env.MONGODB_ROOT_URL as string;
+const MONGODB_URL = ServerConfig.mongodb.rootUrl as string;
 
 if (!MONGODB_URL) {
   throw new Error("请在环境变量中设置 MONGODB_URL");
