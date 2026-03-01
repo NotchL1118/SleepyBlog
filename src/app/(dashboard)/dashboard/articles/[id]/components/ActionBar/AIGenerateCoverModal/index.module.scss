@@ -1,0 +1,78 @@
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes gradient-spotlight {
+  0% {
+    transform: translate(-15%, -20%) scale(0.9);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate(20%, 10%) scale(1.3);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(40%, 40%) scale(0.95);
+    opacity: 0.5;
+  }
+}
+
+.aiGenerateGradient {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    border-radius: inherit;
+  }
+
+  &::before {
+    background-image: linear-gradient(
+      115deg,
+      #fdf2f8 0%,
+      #fbcfe8 10%,
+      #f472b6 25%,
+      #ec4899 40%,
+      #d946ef 60%,
+      #a855f7 75%,
+      #7c3aed 90%,
+      #5b21b6 100%
+    );
+    background-size: 260% 260%;
+    animation: gradient-shift 4s ease-in-out infinite;
+    filter: saturate(1.15);
+  }
+
+  &::after {
+    background-image:
+      radial-gradient(circle at 25% 30%, rgba(255, 255, 255, 0.6), transparent 60%),
+      radial-gradient(circle at 70% 35%, rgba(250, 245, 255, 0.5), transparent 55%),
+      radial-gradient(circle at 55% 80%, rgba(253, 242, 255, 0.4), transparent 60%);
+    filter: blur(35px) saturate(1.1);
+    opacity: 0.75;
+    transform: scale(1.2);
+    animation: gradient-spotlight 7s ease-in-out infinite;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .aiGenerateGradient::before {
+    filter: saturate(1.1) brightness(0.8);
+  }
+
+  .aiGenerateGradient::after {
+    opacity: 0.5;
+    filter: blur(40px) saturate(0.9);
+  }
+}

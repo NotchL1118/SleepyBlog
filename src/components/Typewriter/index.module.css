@@ -1,0 +1,33 @@
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.container {
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5em;
+}
+
+.text {
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cursor {
+  animation: blink 1s ease-in-out infinite;
+  display: inline-block;
+  margin-left: 0.25rem;
+  width: 3px;
+  border-radius: 2px;
+  height: 1em;
+}

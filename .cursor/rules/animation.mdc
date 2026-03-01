@@ -1,0 +1,5 @@
+---
+description: 需要添加网页动效时，可以使用motion提高页面的动效表现
+globs:
+alwaysApply: true
+---

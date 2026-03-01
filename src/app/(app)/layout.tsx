@@ -1,0 +1,39 @@
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import type { Metadata, ResolvingMetadata } from "next";
+
+interface Props {
+  params: Promise<unknown>;
+}
+
+const basicMetadata: Metadata = {
+  description: "A Sleepy Guy's Blog",
+};
+
+export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  // TODO: 以后替换成api
+  const metaTitleArr = [
+    "欲买桂花终买酒，终不似，少年游",
+    "过去只是过去，过去不是牢笼",
+    "早睡早起有益健康",
+    "不畏将来，不念过往",
+  ];
+  return {
+    ...basicMetadata,
+    title: `${metaTitleArr[Math.floor(Math.random() * metaTitleArr.length)]} - SleepYoung's Blog`,
+  };
+}
+
+export default function AppRootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <div className="flex-1">{children}</div>
+      <Footer />
+    </div>
+  );
+}

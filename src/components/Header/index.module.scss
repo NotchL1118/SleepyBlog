@@ -1,0 +1,22 @@
+/* Header surface styling */
+.headerSurface {
+  /* Accent colors for navigation items */
+  --accent-400: #60a5fa; /* blue-400 */
+  --accent-500: #3b82f6; /* blue-500 */
+}
+
+.navItem {
+  position: relative;
+  padding: 6px 12px;
+  color: inherit;
+  transition: color 220ms ease;
+  user-select: none;
+
+  &:hover {
+    color: var(--accent-400);
+  }
+}
+
+.navItemActive {
+  color: var(--accent-500);
+}

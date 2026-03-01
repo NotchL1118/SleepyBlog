@@ -1,0 +1,55 @@
+/* ===============================================
+   VIEW TRANSITION ANIMATIONS (Theme Switch)
+   圆形动画主题切换
+   =============================================== */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* 默认状态 - 切换到亮色主题时的收缩动画 */
+::view-transition-new(root) {
+  background: rgb(var(--color-background)); /* 使用 CSS 变量 */
+  z-index: 1;
+}
+
+::view-transition-old(root) {
+  clip-path: circle(var(--r, 100vmax) at var(--x, 50%) var(--y, 50%));
+  animation: theme-shrink-light 0.7s ease-out forwards;
+  z-index: 2;
+}
+
+/* 切换到暗色主题时 - 重置默认动画并应用扩散动画 */
+.dark::view-transition-old(root) {
+  animation: none; /* 取消默认的收缩动画 */
+  z-index: -1;
+}
+
+.dark::view-transition-new(root) {
+  clip-path: circle(0 at var(--x, 50%) var(--y, 50%));
+  animation: theme-expand-dark 0.7s ease-out forwards;
+  background: rgb(var(--color-background)); /* 使用 CSS 变量保持一致性 */
+  z-index: 1;
+}
+
+/* 亮色主题收缩动画 - 从外部收缩到圆心 */
+@keyframes theme-shrink-light {
+  0% {
+    clip-path: circle(var(--r, 100vmax) at var(--x, 50%) var(--y, 50%));
+  }
+  100% {
+    clip-path: circle(0 at var(--x, 50%) var(--y, 50%));
+  }
+}
+
+/* 暗色主题扩散动画 - 从圆心扩散到外部 */
+@keyframes theme-expand-dark {
+  0% {
+    clip-path: circle(0 at var(--x, 50%) var(--y, 50%));
+  }
+  100% {
+    clip-path: circle(var(--r, 100vmax) at var(--x, 50%) var(--y, 50%));
+  }
+}
