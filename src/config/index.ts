@@ -25,6 +25,7 @@ export const ServerConfig = {
     githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
     googleClientId: process.env.GOOGLE_CLIENT_ID,
     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    baseURL: process.env.BETTER_AUTH_URL,
     trustedOrigins: process.env.TRUSTED_ORIGINS?.split(",") || [],
     adminEmails: process.env.ADMIN_EMAILS?.split(",") || [],
   },
