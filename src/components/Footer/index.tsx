@@ -38,6 +38,19 @@ export default async function Footer() {
               {/* 随机一句话 */}
               <p className="text-sm italic text-gray-500 dark:text-gray-500">&ldquo;{randomQuote}&rdquo;</p>
 
+              {/* 又拍云 */}
+              <p>
+                <a
+                  href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="text-sm text-gray-500 dark:text-gray-500">本网站由</span>
+                  <Image src="/images/upyun.png" width={45} height={20} alt="又拍云" className="mx-1 inline-block" />
+                  <span className="text-sm text-gray-500 dark:text-gray-500">提供CDN加速/云存储服务</span>
+                </a>
+              </p>
+
               {/* 版权信息 */}
               <p className="text-xs text-gray-500 dark:text-gray-500">{COPYRIGHT_TEXT}</p>
 
