@@ -28,6 +28,7 @@ const ADMIN_EMAILS = ServerConfig.betterAuth.adminEmails;
 export const auth = betterAuth({
   database: mongodbAdapter(db),
   trustedOrigins,
+  baseURL: ServerConfig.betterAuth.baseURL, // google服务必须
   socialProviders: {
     github: {
       clientId: ServerConfig.betterAuth.githubClientId!,
