@@ -6,7 +6,7 @@ export default function HeroBanner() {
   return (
     <div className="relative -z-0 h-[498px] w-full bg-white transition-colors dark:bg-gray-900">
       <div
-        style={{ backgroundImage: "url(/images/mountain1.png)" }}
+        style={{ backgroundImage: "url(/images/heroBannerBg.jpeg)" }}
         className="flex h-full w-full items-center justify-center bg-cover bg-center bg-no-repeat"
       >
         <Typewriter
