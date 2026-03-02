@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { CalendarIcon, ClockIcon, FireIcon } from "@/components/Icons";
+import Link from "next/link";
 
 interface IArticleCardProps {
   slug: string;
@@ -11,11 +11,11 @@ interface IArticleCardProps {
   viewCount?: number;
   readingTime?: number;
 }
-
+// TODO 替换图片
+const defaultImage = "/images/heroBannerBg.jpeg";
 const ArticleCard = ({ title, content, coverImage, slug, mode, date, viewCount, readingTime }: IArticleCardProps) => {
   const renderImage = () => {
     // 斜线filter切割方向样式
-    const defaultImage = "/images/mountain1.png";
     return (
       <div
         className="h-full w-[45%] bg-cover bg-center bg-no-repeat transition-all duration-500 ease-in-out hover:scale-125"
@@ -69,7 +69,8 @@ const ArticleCard = ({ title, content, coverImage, slug, mode, date, viewCount, 
       <div className="relative flex h-[190px] overflow-hidden rounded-md bg-black md:h-60 lg:h-52 xl:h-60">
         <div
           style={{
-            backgroundImage: `url(${coverImage || "/images/mountain1.png"})`,
+            // TODO 替换图片
+            backgroundImage: `url(${coverImage || defaultImage})`,
           }}
           className="absolute h-full w-full bg-cover bg-center blur-xl brightness-[0.6]"
         />
